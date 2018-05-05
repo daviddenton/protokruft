@@ -6,18 +6,18 @@ import org.junit.Test
 import org.protokruft.TargetMessageClasses.Companion.ScanClasspath
 import java.io.StringWriter
 
-class DecruftinateTest {
+class GenerateProtobufDslTest {
     @Test
     fun `generates expected output`() {
-        val decruftinate = GenerateProtobufDsl.generate(ScanClasspath("org.protokruft.example"), "name")
+        val generated = GenerateProtobufDsl.generate(ScanClasspath("org.protokruft.example"), "name")
 
         fun check(i: Int) {
             val w = StringWriter()
-            decruftinate[i-1].writeTo(w)
+            generated[i-1].writeTo(w)
             assertThat(w.toString(), equalTo(javaClass.getResourceAsStream("/expected$i.ktt").reader().readText()))
         }
 
-        assertThat(decruftinate.size, equalTo(2))
+        assertThat(generated.size, equalTo(2))
         check(1)
         check(2)
     }
