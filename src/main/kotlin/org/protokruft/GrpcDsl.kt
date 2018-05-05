@@ -10,27 +10,42 @@ import com.squareup.kotlinpoet.asTypeName
 import org.reflections.Reflections
 import kotlin.reflect.KClass
 
-class GrpcDsl(private val pkg: String, private val file: String) {
-    private fun <T : GeneratedMessageV3> Builder.generateFunctionFor(clz: KClass<T>) =
-            apply {
-                addFunction(
-                        FunSpec.builder(clz.java.simpleName.decapitalize()).apply {
-                            addParameter("fn", LambdaTypeName.get(
-                                    receiver = clz.nestedClasses.find { it.simpleName == "Builder" }!!.asClassName(),
-                                    returnType = Unit::class.asTypeName()))
-                            addStatement("return ${clz.qualifiedName}.newBuilder().apply(fn).build()")
-                            returns(clz)
-                        }.build()
-                )
-            }
+interface GeneratedClassesProvider : () -> Iterable<Class<out GeneratedMessageV3>> {
+    companion object {
+        fun ScanClasspath(pkg: String): GeneratedClassesProvider = object : GeneratedClassesProvider {
+            override fun invoke() = Reflections(pkg).getSubTypesOf(GeneratedMessageV3::class.java)
+        }
+    }
+}
 
-    private fun forClass(clz: List<KClass<out GeneratedMessageV3>>) =
-            FileSpec.builder(pkg, file).apply {
-                clz.forEach { generateFunctionFor(it) }
-            }.build()
+object GrpcDsl {
+    fun decruftinate(
+            classesProvider: GeneratedClassesProvider,
+            file: String,
+            nameFn: (KClass<out GeneratedMessageV3>) -> String = { it.java.simpleName.decapitalize() }
+    ): List<FileSpec> {
+        fun <T : GeneratedMessageV3> Builder.generateFunctionFor(clz: KClass<T>) =
+                apply {
+                    addFunction(
+                            FunSpec.builder(nameFn(clz)).apply {
+                                addParameter("fn", LambdaTypeName.get(
+                                        receiver = clz.nestedClasses.find { it.simpleName == "Builder" }!!.asClassName(),
+                                        returnType = Unit::class.asTypeName()))
+                                addStatement("return ${clz.qualifiedName}.newBuilder().apply(fn).build()")
+                                returns(clz)
+                            }.build()
+                    )
+                }
 
-    fun generateAll() =
-            forClass(Reflections(pkg).getSubTypesOf(GeneratedMessageV3::class.java)
-                    .map { it.kotlin }
-                    .sortedBy { it.qualifiedName })
+        return classesProvider()
+                .groupBy { it.`package` }
+                .mapValues { it.value.map { it.kotlin }.sortedBy { it.qualifiedName } }
+                .toList()
+                .sortedBy { it.first.name }
+                .map { (pkg, classes) ->
+                    FileSpec.builder(pkg.name, file).apply {
+                        classes.forEach { generateFunctionFor(it) }
+                    }.build()
+                }
+    }
 }

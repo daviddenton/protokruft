@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option java_package = "org.protokruft.example1";
+package Example;
+
+message Car {
+    string model = 1;
+    Engine engine = 2;
+}
+
+message Engine {
+    int32 cc = 1;
+    int32 bhp = 2;
+}
