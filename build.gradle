@@ -50,12 +50,13 @@ compileKotlin.dependsOn('generateProto')
 compileKotlin.kotlinOptions.jvmTarget = "1.8"
 compileTestKotlin.kotlinOptions.jvmTarget = "1.8"
 
-version = project.hasProperty('releaseVersion') ? project.releaseVersion : 'LOCAL'
+version = project.hasProperty('releaseVersion') ? project.releaseVersion : '0.0.1'
 group = 'org.protokruft'
 
 description = 'Kill all (Protobuf) builders!'
 
 dependencies {
+    compile gradleApi()
     compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     compile 'com.google.protobuf:protobuf-java:3.5.1'
@@ -65,15 +66,6 @@ dependencies {
     compile "org.reflections:reflections:0.9.11"
     testCompile 'junit:junit:4.12'
     testCompile 'com.natpryce:hamkrest:1.3.0.0'
-}
-
-gradlePlugin {
-    plugins {
-        protobufDslPlugin {
-            id = 'org.protokruft.generate-protobuf-dsl-plugin'
-            implementationClass = 'org.protokruft.GenerateProtobufDslPlugin'
-        }
-    }
 }
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier = 'sources'
