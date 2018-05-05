@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option java_package = "org.protokruft.example";
+package Example;
+
+message Person {
+    string name = 1;
+    Address address = 2;
+}
+
+message Address {
+    int32 number = 1;
+    string street = 2;
+    string postcode = 3;
+}
