@@ -1,4 +1,4 @@
-package org.gradle.plugin
+package org.protokruft
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.Plugin
