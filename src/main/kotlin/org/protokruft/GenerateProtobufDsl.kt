@@ -1,6 +1,7 @@
 package org.protokruft
 
 import com.google.protobuf.GeneratedMessageV3
+import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FileSpec.Builder
 import com.squareup.kotlinpoet.FunSpec
@@ -8,7 +9,6 @@ import com.squareup.kotlinpoet.LambdaTypeName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
 import org.reflections.Reflections
-import kotlin.reflect.KClass
 
 interface TargetMessageClasses : () -> Iterable<Class<out GeneratedMessageV3>> {
     companion object {
@@ -22,16 +22,16 @@ object GenerateProtobufDsl {
     fun generate(
             classes: TargetMessageClasses,
             outputFilename: String,
-            nameFn: (KClass<out GeneratedMessageV3>) -> String = { it.java.simpleName.decapitalize() }
+            nameFn: (ClassName) -> String = { it.simpleName().decapitalize() }
     ): List<FileSpec> {
-        fun <T : GeneratedMessageV3> Builder.generateFunctionFor(clz: KClass<T>) =
+        fun Builder.generateFunctionFor(clz: ClassName) =
                 apply {
                     addFunction(
                             FunSpec.builder(nameFn(clz)).apply {
                                 addParameter("fn", LambdaTypeName.get(
-                                        receiver = clz.nestedClasses.find { it.simpleName == "Builder" }!!.asClassName(),
+                                        receiver = clz.nestedClass("Builder"),
                                         returnType = Unit::class.asTypeName()))
-                                addStatement("return ${clz.qualifiedName}.newBuilder().apply(fn).build()")
+                                addStatement("return ${clz.canonicalName}.newBuilder().apply(fn).build()")
                                 returns(clz)
                             }.build()
                     )
@@ -42,8 +42,9 @@ object GenerateProtobufDsl {
                 .mapValues { it.value.map { it.kotlin }.sortedBy { it.qualifiedName } }
                 .toList()
                 .sortedBy { it.first.name }
+                .map { pair -> pair.first.name to pair.second.map { it.asClassName()} }
                 .map { (pkg, classes) ->
-                    FileSpec.builder(pkg.name, outputFilename).apply {
+                    FileSpec.builder(pkg, outputFilename).apply {
                         classes.forEach { generateFunctionFor(it) }
                     }.build()
                 }

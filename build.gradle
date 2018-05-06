@@ -36,6 +36,7 @@ apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
 apply plugin: 'com.google.protobuf'
+apply plugin: 'provided-base'
 
 cobertura.coverageFormats = ['html', 'xml']
 cobertura.coverageSourceDirs = ['src/main/kotlin']
@@ -56,8 +57,9 @@ group = 'org.protokruft'
 description = 'Kill all (Protobuf) builders!'
 
 dependencies {
-    compile gradleApi()
-    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    provided "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    provided 'com.google.protobuf:protobuf-gradle-plugin:0.8.5'
+    provided gradleApi()
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     compile 'com.google.protobuf:protobuf-java:3.5.1'
     compile('com.squareup:kotlinpoet:0.7.0') {
