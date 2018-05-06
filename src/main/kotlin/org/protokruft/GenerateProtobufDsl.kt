@@ -10,17 +10,18 @@ import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
 import org.reflections.Reflections
 
-interface TargetMessageClasses : () -> Iterable<Class<out GeneratedMessageV3>> {
-    companion object {
-        fun ScanClasspath(pkg: String): TargetMessageClasses = object : TargetMessageClasses {
-            override fun invoke() = Reflections(pkg).getSubTypesOf(GeneratedMessageV3::class.java)
-        }
-    }
+typealias TargetMessageClasses = () -> Iterable<ClassName>
+
+fun ScanClasspath(pkg: String) = {
+    Reflections(pkg).getSubTypesOf(GeneratedMessageV3::class.java)
+            .map { it.kotlin }
+            .sortedBy { it.qualifiedName }
+            .map { it.asClassName() }
 }
 
 object GenerateProtobufDsl {
     fun generate(
-            classes: TargetMessageClasses,
+            classNames: TargetMessageClasses,
             outputFilename: String,
             nameFn: (ClassName) -> String = { it.simpleName().decapitalize() }
     ): List<FileSpec> {
@@ -37,12 +38,8 @@ object GenerateProtobufDsl {
                     )
                 }
 
-        return classes()
-                .groupBy { it.`package` }
-                .mapValues { it.value.map { it.kotlin }.sortedBy { it.qualifiedName } }
-                .toList()
-                .sortedBy { it.first.name }
-                .map { pair -> pair.first.name to pair.second.map { it.asClassName()} }
+        return classNames()
+                .groupBy { it.packageName() }
                 .map { (pkg, classes) ->
                     FileSpec.builder(pkg, outputFilename).apply {
                         classes.forEach { generateFunctionFor(it) }

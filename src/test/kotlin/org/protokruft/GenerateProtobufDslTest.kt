@@ -3,7 +3,6 @@ package org.protokruft
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.junit.Test
-import org.protokruft.TargetMessageClasses.Companion.ScanClasspath
 import java.io.StringWriter
 
 class GenerateProtobufDslTest {
@@ -13,7 +12,7 @@ class GenerateProtobufDslTest {
 
         fun check(i: Int) {
             val w = StringWriter()
-            generated[i-1].writeTo(w)
+            generated[i - 1].writeTo(w)
             assertThat(w.toString(), equalTo(javaClass.getResourceAsStream("/expected$i.ktt").reader().readText()))
         }
 
