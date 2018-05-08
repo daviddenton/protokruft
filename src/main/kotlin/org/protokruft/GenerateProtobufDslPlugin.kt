@@ -6,16 +6,19 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.TaskAction
 
 class GenerateProtobufDslPlugin : Plugin<Project> {
-    override fun apply(target: Project) {
-        target.tasks.create(TASK_NAME, ATask::class.java)
+    init {
+        println("hello!!!!!!")
     }
-
-    companion object {
-        internal val TASK_NAME = "yourTask"
+    override fun apply(target: Project) {
+        println(target.pluginManager.findPlugin("com.google.protobuf"))
+        target.tasks.create("generateProtoDsl", GenerateProtoDsl::class.java)
     }
 }
 
-open class ATask : DefaultTask() {
+open class GenerateProtoDsl : DefaultTask() {
+    init {
+        println("creating task")
+    }
     @TaskAction
     fun generateClasses() {
         System.out.printf("HELLO!")

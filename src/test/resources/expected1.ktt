@@ -1,7 +1,11 @@
-package org.protokruft.example1
+package org.protokruft
 
 import kotlin.Unit
 
-fun car(fn: Example1.Car.Builder.() -> Unit): Example1.Car = org.protokruft.example1.Example1.Car.newBuilder().apply(fn).build()
+fun car(fn: AnExample1.Example1.Car.Builder.() -> Unit): AnExample1.Example1.Car = org.protokruft.AnExample1.Example1.Car.newBuilder().apply(fn).build()
 
-fun engine(fn: Example1.Engine.Builder.() -> Unit): Example1.Engine = org.protokruft.example1.Example1.Engine.newBuilder().apply(fn).build()
+fun engine(fn: AnExample1.Example1.Engine.Builder.() -> Unit): AnExample1.Example1.Engine = org.protokruft.AnExample1.Example1.Engine.newBuilder().apply(fn).build()
+
+fun address(fn: AnExample2.Example2.Address.Builder.() -> Unit): AnExample2.Example2.Address = org.protokruft.AnExample2.Example2.Address.newBuilder().apply(fn).build()
+
+fun person(fn: AnExample2.Example2.Person.Builder.() -> Unit): AnExample2.Example2.Person = org.protokruft.AnExample2.Example2.Person.newBuilder().apply(fn).build()

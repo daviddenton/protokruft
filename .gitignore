@@ -7,3 +7,6 @@ out/
 *.iws
 
 gradle.properties
+.gitignore
+configuredProject/
+simpleProject/

@@ -8,16 +8,16 @@ import java.io.StringWriter
 class GenerateProtobufDslTest {
     @Test
     fun `generates expected output`() {
-        val generated = GenerateProtobufDsl.generate(ScanClasspath("org.protokruft.example"), "name")
+        val generated = GenerateProtobufDsl.generate(ScanClasspath("org.protokruft"), "name")
 
         fun check(i: Int) {
             val w = StringWriter()
             generated[i - 1].writeTo(w)
+            println(w.toString())
             assertThat(w.toString(), equalTo(javaClass.getResourceAsStream("/expected$i.ktt").reader().readText()))
         }
 
-        assertThat(generated.size, equalTo(2))
         check(1)
-        check(2)
+        assertThat(generated.size, equalTo(1))
     }
 }

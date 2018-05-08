@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-option java_package = "org.protokruft.example2";
-package Example;
+option java_package = "org.protokruft.AnExample2";
+package AnExample2;
 
 message Person {
     string name = 1;
