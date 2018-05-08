@@ -3,12 +3,13 @@ package org.protokruft
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 
-class MyTestableTask extends DefaultTask {
+class ProtokruftTask extends DefaultTask {
     File outputFile = new File(project.buildDir, "myfile.txt")
 
     @TaskAction
     def action() {
-        def creator = new FileCreator(outputFile)
-        creator.create()
+        outputFile.parentFile.mkdirs()
+        outputFile.createNewFile()
+        outputFile.text = project.extensions.protokruft.fileContent
     }
 }

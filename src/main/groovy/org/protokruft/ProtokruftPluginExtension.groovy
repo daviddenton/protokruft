@@ -1,5 +1,5 @@
 package org.protokruft
 
-class MyPluginExtension {
+class ProtokruftPluginExtension {
     String fileContent = "¯\\_(ツ)_/¯"
 }
