@@ -1,8 +1,8 @@
-import com.jhood.MyPluginExtension
-import com.jhood.MyTask
+import org.protokruft.MyPluginExtension
+import org.protokruft.MyTask
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
-import com.jhood.MyPlugin
+import org.protokruft.MyPlugin
 
 class TestMyPlugin extends GroovyTestCase {
     void testDealWithIt() {

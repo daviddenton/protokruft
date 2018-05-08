@@ -1,6 +1,5 @@
-package com.jhood
+package org.protokruft
 
-import com.jhood.impl.FileCreator
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 

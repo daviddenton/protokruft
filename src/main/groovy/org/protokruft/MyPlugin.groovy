@@ -1,4 +1,4 @@
-package com.jhood
+package org.protokruft
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project

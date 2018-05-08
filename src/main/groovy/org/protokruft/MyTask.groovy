@@ -1,4 +1,4 @@
-package com.jhood
+package org.protokruft
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction

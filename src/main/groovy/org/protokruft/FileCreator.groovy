@@ -1,4 +1,4 @@
-package com.jhood.impl
+package org.protokruft
 
 class FileCreator {
     File outputFile

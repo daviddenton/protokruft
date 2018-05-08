@@ -1,6 +1,6 @@
 package impl
 
-import com.jhood.impl.FileCreator
+import org.protokruft.FileCreator
 
 class TestFileCreator extends GroovyTestCase {
     void testCreatesFileWithContent() {
