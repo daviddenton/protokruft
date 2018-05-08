@@ -1,3 +1,5 @@
+package org.protokruft
+
 import org.gradle.testkit.runner.GradleRunner
 import static org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS

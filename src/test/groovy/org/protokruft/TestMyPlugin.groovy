@@ -1,8 +1,7 @@
-import org.protokruft.ProtokruftPluginExtension
-import org.protokruft.ProtokruftTask
+package org.protokruft
+
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
-import org.protokruft.ProtokruftPlugin
 
 class TestMyPlugin extends GroovyTestCase {
     void testDealWithIt() {
