@@ -1,0 +1,9 @@
+plugins {
+    id "protokruft"
+}
+
+protokruft {
+    fileContent = "CONFIGURED"
+}
+
+

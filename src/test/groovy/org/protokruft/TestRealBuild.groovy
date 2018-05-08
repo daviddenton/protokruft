@@ -1,22 +1,29 @@
 package org.protokruft
 
+import kotlin.jvm.JvmField
 import org.gradle.testkit.runner.GradleRunner
-import static org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
+import org.junit.Rule
+import org.junit.rules.TemporaryFolder
+
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
+import static org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
 
 class TestRealBuild extends GroovyTestCase {
-    def projectDir = new File(getClass().classLoader.getResource("simpleProject").getFile())
-    def configuredProjectDir = new File(getClass().classLoader.getResource("configuredProject").getFile())
+    @Rule
+    @JvmField
+    def root = new TemporaryFolder()
+    File simpleProjectDir
+    File configuredProjectDir
+
     def pluginClasspathResource = getClass().classLoader.findResource("plugin-classpath.txt")
     def pluginClasspath = pluginClasspathResource.readLines().collect { new File(it) }
 
     void setUp() {
-        def buildDir = new File(projectDir, "build")
-        def configuredBuildDir = new File(configuredProjectDir, "build")
-        if(buildDir.exists()) buildDir.deleteDir()
-        if(configuredBuildDir.exists()) configuredBuildDir.deleteDir()
-        buildDir.delete()
-        configuredBuildDir.delete()
+        root.create()
+        simpleProjectDir = root.newFolder("simple")
+        configuredProjectDir = root.newFolder("configured")
+        new File(simpleProjectDir, "build.gradle").write(new File(getClass().getResource("/simple.gradle").getFile()).text)
+        new File(configuredProjectDir, "build.gradle").write(new File(getClass().getResource("/configured.gradle").getFile()).text)
     }
 
     void tearDown() {
@@ -25,7 +32,7 @@ class TestRealBuild extends GroovyTestCase {
 
     void testDealWithIt() {
         def result = GradleRunner.create()
-                .withProjectDir(projectDir)
+                .withProjectDir(simpleProjectDir)
                 .withPluginClasspath(pluginClasspath)
                 .withArguments("dealwithit")
                 .build()
@@ -36,24 +43,24 @@ class TestRealBuild extends GroovyTestCase {
 
     void testMyTask() {
         def result = GradleRunner.create()
-                .withProjectDir(projectDir)
+                .withProjectDir(simpleProjectDir)
                 .withPluginClasspath(pluginClasspath)
                 .withArguments("mytask")
                 .build()
 
         assertEquals(SUCCESS, result.task(":mytask").getOutcome())
-        assertTrue((new File(projectDir, "build/myfile.txt")).exists())
+        assertTrue((new File(simpleProjectDir, "build/myfile.txt")).exists())
     }
 
     void testMyOtherTask() {
         def result = GradleRunner.create()
-                .withProjectDir(projectDir)
+                .withProjectDir(simpleProjectDir)
                 .withPluginClasspath(pluginClasspath)
                 .withArguments("myothertask")
                 .build()
 
         assertEquals(SUCCESS, result.task(":myothertask").getOutcome())
-        assertTrue((new File(projectDir, "build/otherfile.txt")).exists())
+        assertTrue((new File(simpleProjectDir, "build/otherfile.txt")).exists())
     }
 
     void testConfiguration() {
