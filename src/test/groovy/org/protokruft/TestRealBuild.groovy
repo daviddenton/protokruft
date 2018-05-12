@@ -48,7 +48,7 @@ class TestRealBuild extends GroovyTestCase {
                 .build()
 
         assertEquals(SUCCESS, result.task(":myothertask").getOutcome())
-        assertTrue((new File(simpleProjectDir, "build/otherfile2.txt")).exists())
+        assertTrue((new File(simpleProjectDir, "build/otherfile.txt")).exists())
     }
 
     void testConfiguration() {

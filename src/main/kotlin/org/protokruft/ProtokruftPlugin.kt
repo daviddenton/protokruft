@@ -18,7 +18,7 @@ class ProtokruftPlugin : Plugin<Project> {
         project.tasks.create("myothertask", ProtokruftTask::class.java).apply {
             group = "MyPlugin"
             description = "Create otherfile.txt in the build directory"
-            outputFile = File(project.buildDir, "otherfile2.txt")
+            outputFile = File(project.buildDir, "otherfile.txt")
         }
 
         project.afterEvaluate {
