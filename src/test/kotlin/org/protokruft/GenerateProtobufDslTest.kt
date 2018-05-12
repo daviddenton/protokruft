@@ -13,7 +13,6 @@ class GenerateProtobufDslTest {
         fun check(i: Int) {
             val w = StringWriter()
             generated[i - 1].writeTo(w)
-            println(w.toString())
             assertThat(w.toString(), equalTo(javaClass.getResourceAsStream("/expected$i.ktt").reader().readText()))
         }
 
