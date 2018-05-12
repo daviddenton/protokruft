@@ -5,7 +5,10 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FileSpec.Builder
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier.OPERATOR
+import com.squareup.kotlinpoet.KModifier.PRIVATE
 import com.squareup.kotlinpoet.LambdaTypeName
+import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
 import org.reflections.Reflections
@@ -23,19 +26,59 @@ object GenerateProtobufDsl {
     fun generate(
             classNames: TargetMessageClasses,
             outputFilename: String,
-            nameFn: (ClassName) -> String = { it.simpleName().decapitalize() }
+            nameFn: (ClassName) -> String = { "new${it.simpleName()}" }
     ): List<FileSpec> {
+
+        /*
+        object car {
+    private fun new() = Car.newBuilder()
+    fun invoke(fn: Example1.Car.Builder.() -> Unit): Example1.Car = new().apply(fn).build()
+    fun let(fn: (Example1.Car.Builder) -> Unit): Example1.Car = new().also(fn).build()
+}
+
+         */
         fun Builder.generateFunctionFor(clz: ClassName) =
                 apply {
-                    addFunction(
-                            FunSpec.builder(nameFn(clz)).apply {
-                                addParameter("fn", LambdaTypeName.get(
-                                        receiver = clz.nestedClass("Builder"),
-                                        returnType = Unit::class.asTypeName()))
-                                addStatement("return ${clz.canonicalName}.newBuilder().apply(fn).build()")
-                                returns(clz)
-                            }.build()
-                    )
+                    addType(TypeSpec.objectBuilder(nameFn(clz)).apply {
+                        addFunction(
+                                FunSpec.builder("new").apply {
+                                    addModifiers(PRIVATE)
+                                    addStatement("return ${clz.canonicalName}.newBuilder()")
+                                    returns(clz.nestedClass("Builder"))
+                                }.build()
+                        )
+                        addFunction(
+                                FunSpec.builder("invoke").apply {
+                                    addModifiers(OPERATOR)
+                                    addParameter("fn", LambdaTypeName.get(
+                                            receiver = clz.nestedClass("Builder"),
+                                            returnType = Unit::class.asTypeName()))
+                                    addStatement("return new().apply(fn).build()")
+                                    returns(clz)
+                                }.build()
+                        )
+                        addFunction(
+                                FunSpec.builder("apply").apply {
+                                    addParameter("fn", LambdaTypeName.get(
+                                            receiver = clz.nestedClass("Builder"),
+                                            returnType = Unit::class.asTypeName()))
+                                    addStatement("return invoke(fn)")
+                                    returns(clz)
+                                }.build()
+                        )
+                        addFunction(
+                                FunSpec.builder("let").apply {
+                                    addParameter("fn", LambdaTypeName.get(
+                                            receiver = null,
+                                            parameters = clz.nestedClass("Builder"),
+                                            returnType = Unit::class.asTypeName()
+
+                                    ))
+                                    addStatement("return new().apply(fn).build()")
+                                    returns(clz)
+                                }.build()
+                        )
+                    }.build())
                 }
 
         return classNames()
