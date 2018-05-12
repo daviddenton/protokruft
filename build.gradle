@@ -123,13 +123,26 @@ protobuf {
         ofSourceSet('main')*.plugins {
             grpc {}
         }
+        ofSourceSet('test')*.plugins {
+            grpc {}
+        }
     }
 }
 
 sourceSets {
+    main {
+        proto {
+            srcDirs += "src/main/proto"
+        }
+    }
     test {
         java {
-            srcDirs += file("${protobuf.generatedFilesBaseDir}/test/java")
+            srcDirs += file("${protobuf.generatedFilesBaseDir}/main/java")
+            srcDirs += file("src/example/java")
+        }
+        kotlin {
+            srcDirs += file("src/test/kotlin")
+            srcDirs += file("src/example/kotlin")
         }
     }
 }

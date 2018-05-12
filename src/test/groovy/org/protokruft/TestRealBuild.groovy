@@ -6,7 +6,6 @@ import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 
 import static org.gradle.testkit.runner.TaskOutcome.SUCCESS
-import static org.gradle.testkit.runner.TaskOutcome.UP_TO_DATE
 
 class TestRealBuild extends GroovyTestCase {
     @Rule
@@ -30,17 +29,6 @@ class TestRealBuild extends GroovyTestCase {
         setUp()
     }
 
-    void testDealWithIt() {
-        def result = GradleRunner.create()
-                .withProjectDir(simpleProjectDir)
-                .withPluginClasspath(pluginClasspath)
-                .withArguments("dealwithit")
-                .build()
-
-        assertEquals(UP_TO_DATE, result.task(":dealwithit").getOutcome())
-        assertTrue(result.output.contains("(•_•) ( •_•)>⌐■-■ (⌐■_■)"))
-    }
-
     void testMyTask() {
         def result = GradleRunner.create()
                 .withProjectDir(simpleProjectDir)
@@ -60,7 +48,7 @@ class TestRealBuild extends GroovyTestCase {
                 .build()
 
         assertEquals(SUCCESS, result.task(":myothertask").getOutcome())
-        assertTrue((new File(simpleProjectDir, "build/otherfile.txt")).exists())
+        assertTrue((new File(simpleProjectDir, "build/otherfile2.txt")).exists())
     }
 
     void testConfiguration() {

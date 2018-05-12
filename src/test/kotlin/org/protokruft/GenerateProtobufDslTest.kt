@@ -17,7 +17,8 @@ class GenerateProtobufDslTest {
             assertThat(w.toString(), equalTo(javaClass.getResourceAsStream("/expected$i.ktt").reader().readText()))
         }
 
+        assertThat(generated.size, equalTo(2))
         check(1)
-        assertThat(generated.size, equalTo(1))
+        check(2)
     }
 }
