@@ -28,15 +28,6 @@ object GenerateProtobufDsl {
             outputFilename: String,
             nameFn: (ClassName) -> String = { "new${it.simpleName()}" }
     ): List<FileSpec> {
-
-        /*
-        object car {
-    private fun new() = Car.newBuilder()
-    fun invoke(fn: Example1.Car.Builder.() -> Unit): Example1.Car = new().apply(fn).build()
-    fun let(fn: (Example1.Car.Builder) -> Unit): Example1.Car = new().also(fn).build()
-}
-
-         */
         fun Builder.generateFunctionFor(clz: ClassName) =
                 apply {
                     addType(TypeSpec.objectBuilder(nameFn(clz)).apply {
