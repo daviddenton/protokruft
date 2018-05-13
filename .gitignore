@@ -6,6 +6,7 @@ out/
 *.ipr
 *.iws
 
+.gradle
 gradle.properties
 .gitignore
 configuredProject/
