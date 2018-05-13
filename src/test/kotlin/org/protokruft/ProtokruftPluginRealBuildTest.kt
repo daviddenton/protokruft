@@ -30,7 +30,7 @@ class ProtokruftPluginRealBuildTest {
 
     @Test
     fun generatesOutputForProtobufFiles() {
-        val result = GradleRunner.create()
+        GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
                 .withPluginClasspath(pluginClasspath)
                 .withArguments("clean", "generateProto", NAME, "--debug")
@@ -38,7 +38,6 @@ class ProtokruftPluginRealBuildTest {
 
         val expected = File(testProjectDir.root, "build/generated/source/proto/main/java/org/protokruft/example1/custom.kt").readText()
         val excluded = File(testProjectDir.root, "build/generated/source/proto/main/java/org/protokruft/example2/custom.kt")
-        println(result.output)
         assertThat(expected, equalTo(javaClass.getResourceAsStream("/expected1.ktt").reader().readText()))
         assertThat("excluded package was generated " + excluded.absolutePath, excluded.exists(), equalTo(false))
     }
