@@ -1,5 +1,10 @@
 # protokruft
 
+[![coverage](https://coveralls.io/repos/daviddenton/protokruft/badge.svg?branch=master)](https://coveralls.io/github/daviddenton/protokruft?branch=master)
+[![kotlin](https://img.shields.io/badge/kotlin-1.1.1-blue.svg)](http://kotlinlang.org)
+[![build status](https://travis-ci.org/daviddenton/protokruft.svg?branch=master)](https://travis-ci.org/daviddenton/protokruft)
+[![bintray version](https://api.bintray.com/packages/daviddenton/maven/protokruft/images/download.svg)](https://bintray.com/daviddenton/maven/protokruft/_latestVersion)
+
 Protokruft is a simple Gradle plugin for generating a Kotlin DSL from generated Java Protobuf message source. It removes the worst of the Java boilerplate that is generated, leaving you with a nice clean syntax in your Kotlin. The target classes are those which extend `GeneratedMessageV3`. By default, the generated classes are put next to the Java files, into the `build/generated/source/proto/main/java` folder.
 
 ## What does it do?
