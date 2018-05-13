@@ -21,7 +21,7 @@ open class GenerateProtobufDslTask : DefaultTask() {
 }
 
 fun GeneratedProtos(project: Project): TargetMessageClasses = {
-    fun generatedFiles() =
+    fun generatedFiles(): List<File> =
             (project.getTasksByName("generateProto", false)
                     .first() as GenerateProtoTask)
                     .outputSourceDirectorySet.map { it }
@@ -32,12 +32,12 @@ fun GeneratedProtos(project: Project): TargetMessageClasses = {
         val classes = Regex("public static (.*) parseFrom")
                 .findAll(input).map { it.groupValues[1] }
                 .distinct()
-                .map { it.removePrefix("$pkg.") }
                 .toList()
+                .map { it.removePrefix("$pkg.") }
 
-        classes.map { ClassName(pkg, it) }
+        classes.map {
+            val parts = it.split('.').reversed()
+            ClassName(pkg, parts.last(), *parts.dropLast(1).toTypedArray())
+        }
     }
 }
-
-
-
