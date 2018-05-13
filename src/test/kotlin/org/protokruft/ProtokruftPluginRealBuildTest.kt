@@ -1,5 +1,7 @@
 package org.protokruft
 
+import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.equalTo
 import org.apache.commons.io.FileUtils
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Before
@@ -14,15 +16,13 @@ class ProtokruftPluginRealBuildTest {
     @Rule
     @JvmField
     val testProjectDir = TemporaryFolder()
-    val root = File("/tmp/protokruft")
     lateinit var pluginClasspath: List<File>
 
     @Before
     fun setUpProject() {
         testProjectDir.create()
-        root.delete()
-        resourceTo("/build.gradle", root)
-        resourceTo("/example.proto", File(root, "src/main/proto"))
+        resourceTo("/build.gradle", testProjectDir.root)
+        resourceTo("/example1.proto", File(testProjectDir.root, "src/main/proto"))
         val pluginClasspathResource = File(javaClass.classLoader.getResource("plugin-classpath.txt").file)
         pluginClasspath = pluginClasspathResource.reader().readLines().map { File(it) }
     }
@@ -30,15 +30,20 @@ class ProtokruftPluginRealBuildTest {
     @Test
     fun generatesOutputForProtobufFiles() {
         val result = GradleRunner.create()
-                .withProjectDir(root)
+                .withProjectDir(testProjectDir.root)
                 .withPluginClasspath(pluginClasspath)
                 .withArguments("clean", "generateProto", NAME, "--info")
                 .build()
+
+        val generated = File(testProjectDir.root, "build/generated/source/proto/main/java/org/protokruft/example1/custom.kt").readText()
+        assertThat(generated, equalTo(javaClass.getResourceAsStream("/expected1.ktt").reader().readText()))
+
+
         println(result.output)
     }
 
-    private fun resourceTo(s: String, simpleProjectDir: File) {
-        simpleProjectDir.mkdirs()
-        FileUtils.copyFileToDirectory(File(this.javaClass.getResource(s).file), simpleProjectDir)
+    private fun resourceTo(file: String, dir: File) {
+        dir.mkdirs()
+        FileUtils.copyFileToDirectory(File(javaClass.getResource(file).file), dir)
     }
 }
