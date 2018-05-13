@@ -14,6 +14,6 @@ class ProtokruftPluginTest {
         project.pluginManager.apply("protokruft")
 
         assertThat(project.pluginManager.hasPlugin("protokruft"), equalTo(true))
-        assertThat(project.tasks.getByName("generateProtoDsl"), present())
+        assertThat(project.tasks.getByName("generateProtobufDsl"), present())
     }
 }

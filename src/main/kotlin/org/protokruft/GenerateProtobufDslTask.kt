@@ -9,11 +9,11 @@ import java.io.File
 
 open class GenerateProtobufDslTask : DefaultTask() {
     var outputClassFile = "generated"
-    val outputDirectory = "src/example/kotlin"
+    val outputDirectory = File(project.buildDir, "/generated/source/proto/main/java")
 
     @TaskAction
     fun action() = GenerateProtobufDsl.generate(GeneratedProtos(project), outputClassFile)
-            .forEach { it.writeTo(File(outputDirectory)) }
+            .forEach { it.writeTo(outputDirectory) }
 
     companion object {
         const val NAME = "generateProtobufDsl"
