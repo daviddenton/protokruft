@@ -7,7 +7,7 @@ object newCar {
 
     fun apply(fn: Example1.Car.Builder.() -> Unit): Example1.Car = invoke(fn)
 
-    fun let(fn: (Example1.Car.Builder) -> Unit): Example1.Car = new().apply(fn).build()
+    fun also(fn: (Example1.Car.Builder) -> Unit): Example1.Car = new().apply(fn).build()
 }
 
 object newEngine {
@@ -17,5 +17,5 @@ object newEngine {
 
     fun apply(fn: Example1.Engine.Builder.() -> Unit): Example1.Engine = invoke(fn)
 
-    fun let(fn: (Example1.Engine.Builder) -> Unit): Example1.Engine = new().apply(fn).build()
+    fun also(fn: (Example1.Engine.Builder) -> Unit): Example1.Engine = new().apply(fn).build()
 }
