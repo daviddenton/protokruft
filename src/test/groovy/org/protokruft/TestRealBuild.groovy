@@ -1,6 +1,7 @@
 package org.protokruft
 
 import kotlin.jvm.JvmField
+import org.apache.commons.io.FileUtils
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
@@ -21,8 +22,16 @@ class TestRealBuild extends GroovyTestCase {
         root.create()
         simpleProjectDir = root.newFolder("simple")
         configuredProjectDir = root.newFolder("configured")
-        new File(simpleProjectDir, "build.gradle").write(new File(getClass().getResource("/simple.gradle").getFile()).text)
+        def protoDir = new File(simpleProjectDir, "src/main/proto")
+        resourceTo("/example.proto", protoDir)
+        resourceTo("/build.gradle", simpleProjectDir)
+//        new File(simpleProjectDir, "build.gradle").write(new File(getClass().getResource("/simple.gradle").getFile()).text)
         new File(configuredProjectDir, "build.gradle").write(new File(getClass().getResource("/configured.gradle").getFile()).text)
+    }
+
+    private resourceTo(String s, File simpleProjectDir) {
+        simpleProjectDir.mkdirs()
+        FileUtils.copyFileToDirectory(new File(getClass().getResource(s).getFile()), simpleProjectDir)
     }
 
     void tearDown() {
@@ -38,6 +47,15 @@ class TestRealBuild extends GroovyTestCase {
 
         assertEquals(SUCCESS, result.task(":mytask").getOutcome())
         assertTrue((new File(simpleProjectDir, "build/myfile.txt")).exists())
+    }
+
+    void testGenerateProto() {
+        def result = GradleRunner.create()
+                .withProjectDir(simpleProjectDir)
+                .withPluginClasspath(pluginClasspath)
+                .withArguments("generateProto", "--info")
+                .build()
+        println result.output
     }
 
     void testMyOtherTask() {

@@ -10,6 +10,11 @@ class ProtokruftPlugin : Plugin<Project> {
 
         project.extensions.add("protokruft", ProtokruftPluginExtension())
 
+        project.tasks.create("generateProtoDsl", GenerateProtoDslTask::class.java).apply {
+            group = "MyPlugin"
+            description = "Generate Kotlin DSL for Protobuf messages"
+        }
+
         project.tasks.create("mytask", ProtokruftTask::class.java).apply {
             group = "MyPlugin"
             description = "Create myfile.txt in the build directory"

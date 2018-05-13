@@ -101,9 +101,11 @@ dependencies {
     compile('com.squareup:kotlinpoet:0.7.0') {
         exclude group: "org.jetbrains.kotlin"
     }
+
     testCompile localGroovy()
     testCompile 'junit:junit:4.12'
     testCompile 'com.natpryce:hamkrest:1.3.0.0'
+    testCompile "commons-io:commons-io:2.6"
     testCompile gradleTestKit()
     testRuntime files(createClasspathManifest)
 }
