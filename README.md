@@ -46,7 +46,7 @@ Sprinkle on some Protokruft, and you can use it like this:
     }
 ```
 
-## Get it:
+## Use it:
 Add the following to your Gradle file:
 ```groovy
     buildscript {
