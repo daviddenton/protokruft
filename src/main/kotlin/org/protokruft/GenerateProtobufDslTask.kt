@@ -8,12 +8,11 @@ import org.gradle.api.tasks.TaskAction
 import java.io.File
 
 open class GenerateProtobufDslTask : DefaultTask() {
-    var outputClassFile = "generated"
-    val outputDirectory = File(project.buildDir, "/generated/source/proto/main/java")
+    var options: ProtokruftOptions = ProtokruftOptions()
 
     @TaskAction
-    fun action() = GenerateProtobufDsl.generate(GeneratedProtos(project), outputClassFile)
-            .forEach { it.writeTo(outputDirectory) }
+    fun action() = GenerateProtobufDsl.generate(GeneratedProtos(project), options.outputClassFile)
+            .forEach { it.writeTo(options.outputDirectory(project)) }
 
     companion object {
         const val NAME = "generateProtobufDsl"

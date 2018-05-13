@@ -61,7 +61,7 @@ object GenerateProtobufDsl {
                                 FunSpec.builder("let").apply {
                                     addParameter("fn", LambdaTypeName.get(
                                             receiver = null,
-                                            parameters = clz.nestedClass("Builder"),
+                                            parameters = *arrayOf(clz.nestedClass("Builder")),
                                             returnType = Unit::class.asTypeName()
 
                                     ))

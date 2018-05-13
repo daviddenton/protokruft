@@ -22,6 +22,10 @@ repositories {
     jcenter()
 }
 
+protokruft {
+    outputClassFile = "custom"
+}
+
 protobuf {
     protoc {
         artifact = 'com.google.protobuf:protoc:3.0.0'
