@@ -7,27 +7,10 @@ import java.io.File
 
 class ProtokruftPlugin : Plugin<Project> {
     override fun apply(project: Project) {
-
-        project.extensions.add("protokruft", ProtokruftPluginExtension())
-
-        project.tasks.create("generateProtoDsl", GenerateProtoDslTask::class.java).apply {
-            group = "MyPlugin"
-            description = "Generate Kotlin DSL for Protobuf messages"
-        }
-
-        project.tasks.create("mytask", ProtokruftTask::class.java).apply {
-            group = "MyPlugin"
-            description = "Create myfile.txt in the build directory"
-        }
-
-        project.tasks.create("myothertask", ProtokruftTask::class.java).apply {
+        project.tasks.create("generateProtoDsl", ProtokruftTask::class.java).apply {
             group = "MyPlugin"
             description = "Create otherfile.txt in the build directory"
             outputFile = File(project.buildDir, "otherfile.txt")
-        }
-
-        project.afterEvaluate {
-            print(project.extensions.getByType(ProtokruftPluginExtension::class.java).fileContent)
         }
     }
 }

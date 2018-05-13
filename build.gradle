@@ -30,7 +30,6 @@ repositories {
 
 apply plugin: 'java'
 apply plugin: 'kotlin'
-apply plugin: 'groovy'
 apply plugin: 'maven'
 apply plugin: 'cobertura'
 apply plugin: 'java-gradle-plugin'
@@ -102,7 +101,6 @@ dependencies {
         exclude group: "org.jetbrains.kotlin"
     }
 
-    testCompile localGroovy()
     testCompile 'junit:junit:4.12'
     testCompile 'com.natpryce:hamkrest:1.3.0.0'
     testCompile "commons-io:commons-io:2.6"
