@@ -7,9 +7,10 @@ import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
+import org.protokruft.GenerateProtobufDslTask.Companion.NAME
 import java.io.File
 
-class PluginIntTest {
+class ProtokruftPluginRealBuildTest {
 
     @Rule
     @JvmField
@@ -26,10 +27,14 @@ class PluginIntTest {
     @Test
     @Ignore
     fun test() {
+        val pluginClasspathResource = File(javaClass.classLoader.getResource("plugin-classpath.txt").file)
+        val pluginClasspath = pluginClasspathResource.reader().readLines().map { File(it) }
+
+        println(pluginClasspath)
         val result = GradleRunner.create()
                 .withProjectDir(ou)
-                .withPluginClasspath()
-                .withArguments("clean", "generateProto", "generateProtoDsl", "--info")
+                .withPluginClasspath(pluginClasspath)
+                .withArguments("clean", "generateProto", NAME, "--info")
                 .build()
         println(result.output)
     }

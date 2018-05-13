@@ -85,7 +85,9 @@ task createClasspathManifest {
 
     doLast {
         outputDir.mkdirs()
-        file("$outputDir/plugin-classpath.txt").text = sourceSets.main.runtimeClasspath.join("\n")
+        file("$outputDir/plugin-classpath.txt").text =
+                file('out/production/classes').absolutePath + "\n" +
+                sourceSets.main.runtimeClasspath.join("\n")
     }
 }
 
