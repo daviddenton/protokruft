@@ -67,7 +67,7 @@ Add the following to your Gradle file:
         outputClassFile = "myCustomFile" // this is "messageDsl" by default
     }
 
-    // this sets up 
+    // allows you to just run generateProtoDsl
     generateProtobufDsl.dependsOn('generateProto')    
 ```
 
