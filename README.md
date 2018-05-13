@@ -37,7 +37,7 @@ The generated Java code from the Google protoc would be used like this:
             .build()
 ```
 
-Sprinkle on some Protokruft, and you can use it like this:
+Sprinkle on some Protokruft, and you can use it like this to hide the `newBuilder().build()` boilerplate:
 ```kotlin
     val person = newPerson {
         name = "Hello Kitty"
@@ -45,6 +45,17 @@ Sprinkle on some Protokruft, and you can use it like this:
             number = 123
             street = "Hello Kitty Street"
             postcode = "N304SD"
+        }
+    }
+```
+... or like this to scope the `Builder` as `it`: 
+```kotlin    
+    val personScoped = newPerson.also {
+        it.name = "Hello Kitty"
+        it.address = newAddress.also {
+            it.number = 123
+            it.street = "Hello Kitty Street"
+            it.postcode = "N304SD"
         }
     }
 ```
