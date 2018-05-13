@@ -62,9 +62,13 @@ Add the following to your Gradle file:
 
     apply plugin: 'protokruft'
 
-    // this block is optional - by default, protokruft will generate dsls for all found protobuf messages
     protokruft {
         packageNames = ["com.mygreatpackage"] // this is "*" by default
         outputClassFile = "myCustomFile" // this is "messageDsl" by default
     }
+
+    // this sets up 
+    generateProtobufDsl.dependsOn('generateProto')    
 ```
+
+Then just run: `./gradlew generateProtobufDsl`
