@@ -63,8 +63,8 @@ Add the following to your Gradle file:
     apply plugin: 'protokruft'
 
     protokruft {
-        packageNames = ["com.mygreatpackage"] // this is "*" by default
-        outputClassFile = "myCustomFile" // this is "messageDsl" by default
+        packageNames = ["com.mygreatpackage"] // "*" by default
+        outputClassFile = "myCustomFile" // "messageDsl" by default
     }
 
     // allows you to just run generateProtoDsl
