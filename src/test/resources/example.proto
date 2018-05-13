@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-option java_package = "org.protokruft.example1";
-package AnExample1;
+option java_package = "org.protokruft.example";
+package AnExample;
 
 message Car {
     string model = 1;

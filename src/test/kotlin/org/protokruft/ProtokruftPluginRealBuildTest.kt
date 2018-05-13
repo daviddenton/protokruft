@@ -14,13 +14,15 @@ class ProtokruftPluginRealBuildTest {
     @Rule
     @JvmField
     val testProjectDir = TemporaryFolder()
+    val root = File("/tmp/protokruft")
     lateinit var pluginClasspath: List<File>
 
     @Before
     fun setUpProject() {
         testProjectDir.create()
-        resourceTo("/build.gradle", testProjectDir.root)
-        resourceTo("/example.proto", File(testProjectDir.root, "src/main/proto"))
+        root.delete()
+        resourceTo("/build.gradle", root)
+        resourceTo("/example.proto", File(root, "src/main/proto"))
         val pluginClasspathResource = File(javaClass.classLoader.getResource("plugin-classpath.txt").file)
         pluginClasspath = pluginClasspathResource.reader().readLines().map { File(it) }
     }
@@ -28,9 +30,9 @@ class ProtokruftPluginRealBuildTest {
     @Test
     fun generatesOutputForProtobufFiles() {
         val result = GradleRunner.create()
-                .withProjectDir(testProjectDir.root)
+                .withProjectDir(root)
                 .withPluginClasspath(pluginClasspath)
-                .withArguments("generateProto", NAME, "--info")
+                .withArguments("clean", "generateProto", NAME, "--info")
                 .build()
         println(result.output)
     }
