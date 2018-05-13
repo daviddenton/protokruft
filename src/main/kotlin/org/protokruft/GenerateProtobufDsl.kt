@@ -58,7 +58,7 @@ object GenerateProtobufDsl {
                                 }.build()
                         )
                         addFunction(
-                                FunSpec.builder("let").apply {
+                                FunSpec.builder("also").apply {
                                     addParameter("fn", LambdaTypeName.get(
                                             receiver = null,
                                             parameters = *arrayOf(clz.nestedClass("Builder")),
