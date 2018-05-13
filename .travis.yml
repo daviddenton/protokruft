@@ -4,7 +4,7 @@ jdk:
 - oraclejdk8
 
 after_success:
-- ./gradlew cobertura coveralls
+- ./gradlew clean cobertura coveralls
 
 ache:
   directories:

@@ -138,11 +138,9 @@ sourceSets {
     test {
         java {
             srcDirs += file("${protobuf.generatedFilesBaseDir}/main/java")
-            srcDirs += file("src/example/java")
         }
         kotlin {
             srcDirs += file("src/test/kotlin")
-            srcDirs += file("src/example/kotlin")
         }
     }
 }
@@ -197,3 +195,8 @@ bintray {
         }
     }
 }
+
+compileJava.dependsOn("generateProto")
+compileTestJava.dependsOn("generateProto")
+compileKotlin.dependsOn("generateProto")
+compileTestKotlin.dependsOn("generateProto")
