@@ -3,7 +3,6 @@ package org.protokruft
 import org.apache.commons.io.FileUtils
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
@@ -15,26 +14,23 @@ class ProtokruftPluginRealBuildTest {
     @Rule
     @JvmField
     val testProjectDir = TemporaryFolder()
-    val ou = File("/tmp/protokruft")
+    lateinit var pluginClasspath: List<File>
 
     @Before
     fun setUpProject() {
-        ou.delete()
-        resourceTo("/build.gradle", ou)
-        resourceTo("/example.proto", File(ou, "src/main/proto"))
+        testProjectDir.create()
+        resourceTo("/build.gradle", testProjectDir.root)
+        resourceTo("/example.proto", File(testProjectDir.root, "src/main/proto"))
+        val pluginClasspathResource = File(javaClass.classLoader.getResource("plugin-classpath.txt").file)
+        pluginClasspath = pluginClasspathResource.reader().readLines().map { File(it) }
     }
 
     @Test
-    @Ignore
-    fun test() {
-        val pluginClasspathResource = File(javaClass.classLoader.getResource("plugin-classpath.txt").file)
-        val pluginClasspath = pluginClasspathResource.reader().readLines().map { File(it) }
-
-        println(pluginClasspath)
+    fun generatesOutputForProtobufFiles() {
         val result = GradleRunner.create()
-                .withProjectDir(ou)
+                .withProjectDir(testProjectDir.root)
                 .withPluginClasspath(pluginClasspath)
-                .withArguments("clean", "generateProto", NAME, "--info")
+                .withArguments("generateProto", NAME, "--info")
                 .build()
         println(result.output)
     }
