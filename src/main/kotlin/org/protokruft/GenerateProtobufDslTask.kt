@@ -47,6 +47,7 @@ fun GeneratedProtos(project: Project, packageNames: Set<String>?): TargetMessage
     project.logger.debug("Protokruft: filtering classes to packages: " + (packageNames?.toString() ?: "*"))
 
     generatedFiles().flatMap {
+        project.logger.debug("Protokruft: processing: ${it.absolutePath}")
 
         val pkg = Regex("package (.*);").find(it.readText())!!.groupValues[1]
 
