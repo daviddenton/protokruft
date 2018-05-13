@@ -195,8 +195,3 @@ bintray {
         }
     }
 }
-
-compileJava.dependsOn("generateProto")
-compileTestJava.dependsOn("generateProto")
-compileKotlin.dependsOn("generateProto")
-compileTestKotlin.dependsOn("generateProto")
