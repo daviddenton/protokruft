@@ -52,7 +52,6 @@ fun GeneratedProtos(project: Project, packageNames: Set<String>?): TargetMessage
         val pkg = Regex("package (.*);").find(it.readText())!!.groupValues[1]
 
         findAllClassesIn(it.readText(), pkg).map(toClassName(pkg))
-                .distinct()
                 .filter { clz ->
                     packageNames?.any { clz.packageName().startsWith(it) } ?: true
                 }
