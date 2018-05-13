@@ -24,6 +24,7 @@ repositories {
 
 protokruft {
     outputClassFile = "custom"
+    packageNames = [ "org.protokruft.example1" ]
 }
 
 protobuf {

@@ -11,37 +11,51 @@ open class GenerateProtobufDslTask : DefaultTask() {
     var options: ProtokruftOptions = ProtokruftOptions()
 
     @TaskAction
-    fun action() = GenerateProtobufDsl.generate(GeneratedProtos(project), options.outputClassFile)
+    fun action() = GenerateProtobufDsl.generate(GeneratedProtos(project, options.packageNames), options.outputClassFile)
             .forEach {
                 val directory = options.outputDirectory(project)
-                project.logger.debug("Protokruft: writing ${it.name}.kt to ${directory.absolutePath}")
-                it.writeTo(directory) }
+                project.logger.debug("Protokruft: writing ${it.packageName}.${it.name}.kt to ${directory.absolutePath}")
+                it.writeTo(directory)
+            }
 
     companion object {
         const val NAME = "generateProtobufDsl"
     }
 }
 
-fun GeneratedProtos(project: Project): TargetMessageClasses = {
+fun GeneratedProtos(project: Project, packageNames: Set<String>?): TargetMessageClasses = {
+
+    fun toClassName(pkg: String): (String) -> ClassName = {
+        it.split('.').reversed()
+                .let { ClassName(pkg, it.last(), *it.dropLast(1).toTypedArray()) }
+    }
+
     fun generatedFiles(): List<File> =
             (project.getTasksByName("generateProto", false)
                     .first() as GenerateProtoTask)
                     .outputSourceDirectorySet.map { it }
+                    .also {
+                        project.logger.debug("Protokruft: found files: " + it.toString())
+                    }
+
+    fun findAllClassesIn(input: String, pkg: String) = Regex("public static (.*) parseFrom")
+            .findAll(input).map { it.groupValues[1] }
+            .distinct()
+            .toList()
+            .map { it.removePrefix("$pkg.") }
+
+    project.logger.debug("Protokruft: filtering classes to packages: " + (packageNames?.toString() ?: "*"))
 
     generatedFiles().flatMap {
-        val input = it.readText()
-        val pkg = Regex("package (.*);").find(input)!!.groupValues[1]
-        val classes = Regex("public static (.*) parseFrom")
-                .findAll(input).map { it.groupValues[1] }
-                .distinct()
-                .toList()
-                .map { it.removePrefix("$pkg.") }
 
-        classes.map {
-            val parts = it.split('.').reversed()
-            ClassName(pkg, parts.last(), *parts.dropLast(1).toTypedArray())
-        }.also {
-            project.logger.debug("Protokruft: found classes to generate: " + it.toString())
-        }
+        val pkg = Regex("package (.*);").find(it.readText())!!.groupValues[1]
+
+        findAllClassesIn(it.readText(), pkg).map(toClassName(pkg))
+                .filter { clz ->
+                    packageNames?.any { clz.packageName().startsWith(it) } ?: true
+                }
+                .also {
+                    project.logger.debug("Protokruft: found classes to generate: " + it.toString())
+                }
     }
 }
