@@ -1,7 +1,7 @@
 # protokruft
 
 [![coverage](https://coveralls.io/repos/daviddenton/protokruft/badge.svg?branch=master)](https://coveralls.io/github/daviddenton/protokruft?branch=master)
-[![kotlin](https://img.shields.io/badge/kotlin-1.1.1-blue.svg)](http://kotlinlang.org)
+[![kotlin](https://img.shields.io/badge/kotlin-1.2-blue.svg)](http://kotlinlang.org)
 [![build status](https://travis-ci.org/daviddenton/protokruft.svg?branch=master)](https://travis-ci.org/daviddenton/protokruft)
 [![bintray version](https://api.bintray.com/packages/daviddenton/maven/protokruft/images/download.svg)](https://bintray.com/daviddenton/maven/protokruft/_latestVersion)
 
