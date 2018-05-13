@@ -12,7 +12,10 @@ open class GenerateProtobufDslTask : DefaultTask() {
 
     @TaskAction
     fun action() = GenerateProtobufDsl.generate(GeneratedProtos(project), options.outputClassFile)
-            .forEach { it.writeTo(options.outputDirectory(project)) }
+            .forEach {
+                val directory = options.outputDirectory(project)
+                project.logger.debug("Protokruft: writing ${it.name}.kt to ${directory.absolutePath}")
+                it.writeTo(directory) }
 
     companion object {
         const val NAME = "generateProtobufDsl"
@@ -37,6 +40,8 @@ fun GeneratedProtos(project: Project): TargetMessageClasses = {
         classes.map {
             val parts = it.split('.').reversed()
             ClassName(pkg, parts.last(), *parts.dropLast(1).toTypedArray())
+        }.also {
+            project.logger.debug("Protokruft: found classes to generate: " + it.toString())
         }
     }
 }

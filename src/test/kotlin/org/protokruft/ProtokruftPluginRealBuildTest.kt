@@ -32,13 +32,11 @@ class ProtokruftPluginRealBuildTest {
         val result = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
                 .withPluginClasspath(pluginClasspath)
-                .withArguments("clean", "generateProto", NAME, "--info")
+                .withArguments("clean", "generateProto", NAME, "--debug")
                 .build()
 
         val generated = File(testProjectDir.root, "build/generated/source/proto/main/java/org/protokruft/example1/custom.kt").readText()
         assertThat(generated, equalTo(javaClass.getResourceAsStream("/expected1.ktt").reader().readText()))
-
-
         println(result.output)
     }
 
