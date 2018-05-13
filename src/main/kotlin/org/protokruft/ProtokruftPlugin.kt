@@ -8,8 +8,8 @@ import java.io.File
 class ProtokruftPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.tasks.create("generateProtoDsl", ProtokruftTask::class.java).apply {
-            group = "MyPlugin"
-            description = "Create otherfile.txt in the build directory"
+            group = "Protokruft"
+            description = "Generate Kotlin DSLs for Protobuf messages"
             outputFile = File(project.buildDir, "otherfile.txt")
         }
     }
