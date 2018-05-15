@@ -46,17 +46,23 @@ fun GeneratedProtos(project: Project, packageNames: Set<String>?): TargetMessage
 
     project.logger.debug("Protokruft: filtering classes to packages: " + (packageNames?.toString() ?: "*"))
 
-    generatedFiles().flatMap {
-        project.logger.debug("Protokruft: processing: ${it.absolutePath}")
+    generatedFiles()
+            .flatMap { file ->
+                project.logger.debug("Protokruft: processing: ${file.absolutePath}")
 
-        val pkg = Regex("package (.*);").find(it.readText())!!.groupValues[1]
+                val input = file.readText()
 
-        findAllClassesIn(it.readText(), pkg).map(toClassName(pkg))
-                .filter { clz ->
-                    packageNames?.any { clz.packageName().startsWith(it) } ?: true
+                Regex("package (.*);").find(input)?.let { it.groupValues[1] }?.let { pkg ->
+
+                    findAllClassesIn(input, pkg).map(toClassName(pkg))
+                            .filter { clz ->
+                                packageNames?.any { clz.packageName().startsWith(it) } ?: true
+                            }
+                            .also {
+                                project.logger.debug("Protokruft: found classes to generate: " + it.toString())
+                            }
+                } ?: emptyList<ClassName>().also {
+                    project.logger.warn("Protokruft: no package statement found in: ${file.absolutePath}")
                 }
-                .also {
-                    project.logger.debug("Protokruft: found classes to generate: " + it.toString())
-                }
-    }
+            }
 }
