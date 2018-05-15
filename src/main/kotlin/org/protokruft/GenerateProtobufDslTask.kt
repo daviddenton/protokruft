@@ -34,6 +34,7 @@ fun GeneratedProtos(project: Project, packageNames: Set<String>?): TargetMessage
             (project.getTasksByName("generateProto", false)
                     .first() as GenerateProtoTask)
                     .outputSourceDirectorySet.map { it }
+                    .filter { it.name.endsWith(".java") }
                     .also {
                         project.logger.debug("Protokruft: found files: " + it.toString())
                     }
