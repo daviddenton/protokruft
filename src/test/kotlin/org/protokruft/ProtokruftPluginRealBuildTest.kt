@@ -24,21 +24,24 @@ class ProtokruftPluginRealBuildTest {
         resourceTo("/build.gradle", testProjectDir.root)
         resourceTo("/example1.proto", File(testProjectDir.root, "src/main/proto"))
         resourceTo("/example2.proto", File(testProjectDir.root, "src/main/proto"))
+        resourceTo("/example3.proto", File(testProjectDir.root, "src/main/proto"))
         val pluginClasspathResource = File(javaClass.classLoader.getResource("plugin-classpath.txt").file)
         pluginClasspath = pluginClasspathResource.reader().readLines().map { File(it) }
     }
 
     @Test
     fun generatesOutputForProtobufFiles() {
-        GradleRunner.create()
+        val result = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
                 .withPluginClasspath(pluginClasspath)
                 .withArguments("clean", "generateProto", NAME, "--debug")
                 .build()
 
-        val expected = File(testProjectDir.root, "build/generated/source/proto/main/java/org/protokruft/example1/custom.kt").readText()
+        println(result.output)
+
+        val expected = File(testProjectDir.root, "build/generated/source/proto/main/java/org/protokruft/example3/custom.kt").readText()
         val excluded = File(testProjectDir.root, "build/generated/source/proto/main/java/org/protokruft/example2/custom.kt")
-        assertThat(expected, equalTo(javaClass.getResourceAsStream("/expected1.ktt").reader().readText()))
+        assertThat(expected, equalTo(javaClass.getResourceAsStream("/expected3.ktt").reader().readText()))
         assertThat("excluded package was generated " + excluded.absolutePath, excluded.exists(), equalTo(false))
     }
 

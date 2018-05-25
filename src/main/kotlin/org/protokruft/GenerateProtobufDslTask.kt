@@ -39,11 +39,17 @@ fun GeneratedProtos(project: Project, packageNames: Set<String>?): TargetMessage
                         project.logger.debug("Protokruft: found files: " + it.toString())
                     }
 
+    fun isTopLevelClass(className: String): Boolean = className.count { it == '.' } == 1
+
     fun findAllClassesIn(input: String, pkg: String) = Regex("public static (.*) parseFrom")
             .findAll(input).map { it.groupValues[1] }
             .distinct()
             .toList()
             .map { it.removePrefix("$pkg.") }
+            .filter(::isTopLevelClass)
+            .also {
+                project.logger.debug("Protokruft: found classes: ${it.joinToString(", ")}")
+            }
 
     project.logger.debug("Protokruft: filtering classes to packages: " + (packageNames?.toString() ?: "*"))
 

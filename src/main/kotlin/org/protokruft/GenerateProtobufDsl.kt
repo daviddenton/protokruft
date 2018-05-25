@@ -18,6 +18,7 @@ typealias TargetMessageClasses = () -> Iterable<ClassName>
 fun ScanClasspath(pkg: String) = {
     Reflections(pkg).getSubTypesOf(GeneratedMessageV3::class.java)
             .map { it.kotlin }
+            .filter { it.java.declaringClass?.declaringClass == null }
             .sortedBy { it.qualifiedName }
             .map { it.asClassName() }
 }
