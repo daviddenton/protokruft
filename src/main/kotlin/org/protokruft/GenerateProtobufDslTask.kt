@@ -27,7 +27,7 @@ fun GeneratedProtos(project: Project, packageNames: Set<String>?): TargetMessage
 
     fun toClassName(pkg: String): (String) -> ClassName = {
         it.split('.').reversed()
-                .let { ClassName(pkg, it.last(), *it.dropLast(1).toTypedArray()) }
+                .let { ClassName(pkg, it.last(), *it.dropLast(1).reversed().toTypedArray()) }
     }
 
     fun generatedFiles(): List<File> =
@@ -39,14 +39,11 @@ fun GeneratedProtos(project: Project, packageNames: Set<String>?): TargetMessage
                         project.logger.debug("Protokruft: found files: " + it.toString())
                     }
 
-    fun isTopLevelClass(className: String): Boolean = className.count { it == '.' } < 2
-
     fun findAllClassesIn(input: String, pkg: String) = Regex("public static (.*) parseFrom")
             .findAll(input).map { it.groupValues[1] }
             .distinct()
-            .toList()
             .map { it.removePrefix("$pkg.") }
-            .filter(::isTopLevelClass)
+            .toList()
             .also {
                 project.logger.debug("Protokruft: found classes: ${it.joinToString(", ")}")
             }

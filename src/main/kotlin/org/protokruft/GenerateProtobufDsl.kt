@@ -18,16 +18,19 @@ typealias TargetMessageClasses = () -> Iterable<ClassName>
 fun ScanClasspath(pkg: String) = {
     Reflections(pkg).getSubTypesOf(GeneratedMessageV3::class.java)
             .map { it.kotlin }
-            .filter { it.java.declaringClass?.declaringClass == null }
             .sortedBy { it.qualifiedName }
             .map { it.asClassName() }
 }
+
+private fun ClassName.toSimpleNames() = reflectionName().run {
+    if (contains("$")) substringAfter("$").replace("$", "") else simpleName()
+}.replace(".", "")
 
 object GenerateProtobufDsl {
     fun generate(
             classNames: TargetMessageClasses,
             outputFilename: String,
-            nameFn: (ClassName) -> String = { "new${it.simpleName()}" }
+            nameFn: (ClassName) -> String = { "new${it.toSimpleNames()}" }
     ): List<FileSpec> {
         fun Builder.generateFunctionFor(clz: ClassName) =
                 apply {
@@ -77,7 +80,7 @@ object GenerateProtobufDsl {
                 .groupBy { it.packageName() }
                 .map { (pkg, classes) ->
                     FileSpec.builder(pkg, outputFilename).apply {
-                        classes.forEach { generateFunctionFor(it) }
+                        classes.sortedBy { it.reflectionName() }.forEach { generateFunctionFor(it) }
                     }.build()
                 }
     }

@@ -12,6 +12,16 @@ object newCat {
     fun also(fn: (Example3.Cat.Builder) -> Unit): Example3.Cat = new().apply(fn).build()
 }
 
+object newCatLeg {
+    private fun new(): Example3.Cat.Leg.Builder = org.protokruft.example3.Example3.Cat.Leg.newBuilder()
+
+    operator fun invoke(fn: Example3.Cat.Leg.Builder.() -> Unit): Example3.Cat.Leg = new().apply(fn).build()
+
+    fun apply(fn: Example3.Cat.Leg.Builder.() -> Unit): Example3.Cat.Leg = invoke(fn)
+
+    fun also(fn: (Example3.Cat.Leg.Builder) -> Unit): Example3.Cat.Leg = new().apply(fn).build()
+}
+
 object newLeg {
     private fun new(): Example3.Leg.Builder = org.protokruft.example3.Example3.Leg.newBuilder()
 
