@@ -39,7 +39,7 @@ fun GeneratedProtos(project: Project, packageNames: Set<String>?): TargetMessage
                         project.logger.debug("Protokruft: found files: " + it.toString())
                     }
 
-    fun isTopLevelClass(className: String): Boolean = className.count { it == '.' } == 1
+    fun isTopLevelClass(className: String): Boolean = className.count { it == '.' } < 2
 
     fun findAllClassesIn(input: String, pkg: String) = Regex("public static (.*) parseFrom")
             .findAll(input).map { it.groupValues[1] }
