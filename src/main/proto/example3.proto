@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option java_package = "org.protokruft.example3";
+package AnExample3;
+
+message Cat {
+    message Leg {}
+}
+
+message Leg {}
