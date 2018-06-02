@@ -6,7 +6,7 @@ jdk:
 after_success:
 - ./gradlew clean cobertura coveralls
 
-ache:
+cache:
   directories:
   - $HOME/.m2
   - $HOME/.gradle
