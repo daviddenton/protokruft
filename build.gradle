@@ -19,8 +19,6 @@ buildscript {
 plugins {
     id 'java-gradle-plugin'
     id "com.jfrog.bintray" version "1.7.3"
-    id 'net.saliman.cobertura' version '2.2.5'
-    id 'com.github.kt3k.coveralls' version '2.0.1'
 }
 
 repositories {
