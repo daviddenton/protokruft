@@ -37,9 +37,6 @@ apply plugin: 'maven-publish'
 apply plugin: 'com.google.protobuf'
 apply plugin: 'provided-base'
 
-cobertura.coverageFormats = ['html', 'xml']
-cobertura.coverageSourceDirs = ['src/main/kotlin']
-
 version = project.hasProperty('releaseVersion') ? project.releaseVersion : '0.0.1'
 group = 'org.protokruft'
 archivesBaseName = 'protokruft'
@@ -87,6 +84,12 @@ task createClasspathManifest {
                 file('out/production/classes').absolutePath + "\n" +
                 sourceSets.main.runtimeClasspath.join("\n")
     }
+}
+
+cobertura {
+    coverageFormats = ['html', 'xml']
+    coverageDirs = ["${projectDir}/build/classes/kotlin/main"]
+    coverageSourceDirs = ["${projectDir}/src/main/kotlin"]
 }
 
 dependencies {
