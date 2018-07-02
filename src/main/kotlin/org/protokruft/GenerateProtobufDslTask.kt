@@ -47,7 +47,7 @@ fun GeneratedServiceProtos(project: Project, packageNames: Set<String>?): Target
         val input = it.readText()
 
         Regex("package (.*);").find(input)?.let { it.groupValues[1] }?.let {
-            Regex("class (.*)Grpc").findAllClassesIn(input, it).limitToPackages(project, it, packageNames)
+            Regex("class (.*)BlockingStub").findAllClassesIn(input, it).limitToPackages(project, it, packageNames)
         }
     }.flatten()
 }
