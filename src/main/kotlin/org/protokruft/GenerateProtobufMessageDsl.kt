@@ -1,6 +1,5 @@
 package org.protokruft
 
-import com.google.protobuf.GeneratedMessageV3
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FileSpec.Builder
@@ -9,24 +8,11 @@ import com.squareup.kotlinpoet.KModifier.OPERATOR
 import com.squareup.kotlinpoet.KModifier.PRIVATE
 import com.squareup.kotlinpoet.LambdaTypeName
 import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.asTypeName
-import org.reflections.Reflections
 
 typealias TargetMessageClasses = () -> Iterable<ClassName>
 
-fun ScanClasspath(pkg: String) = {
-    Reflections(pkg).getSubTypesOf(GeneratedMessageV3::class.java)
-            .map { it.kotlin }
-            .sortedBy { it.qualifiedName }
-            .map { it.asClassName() }
-}
-
-private fun ClassName.toSimpleNames() = reflectionName().run {
-    if (contains("$")) substringAfter("$").replace("$", "") else simpleName()
-}.replace(".", "")
-
-object GenerateProtobufDsl {
+object GenerateProtobufMessageDsl {
     fun generate(
             classNames: TargetMessageClasses,
             outputFilename: String,

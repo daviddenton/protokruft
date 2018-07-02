@@ -1,32 +1,25 @@
 package org.protokruft
 
+import com.google.protobuf.GeneratedMessageV3
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.FileSpec
 import org.junit.Test
-import java.io.StringWriter
 
-class GenerateProtobufDslTest {
-    fun check(i: Int, list: List<FileSpec>, root: String) {
-        val w = StringWriter()
-        list[i - 1].writeTo(w)
-        assertThat(w.toString(), equalTo(javaClass.getResourceAsStream("/$root$i.ktt").reader().readText()))
-    }
-
+class GenerateProtobufMessageDslTest {
     @Test
     fun `generates expected output for multiple packages`() {
-        val generated = GenerateProtobufDsl.generate(ScanClasspath("org.protokruft"), "name")
+        val generated = GenerateProtobufMessageDsl.generate(ScanClasspathFor("org.protokruft", GeneratedMessageV3::class.java), "name")
 
         assertThat(generated.size, equalTo(3))
-        check(1, generated, "expected")
-        check(2, generated, "expected")
-        check(3, generated, "expected")
+        check(1, generated, "expectedMessage")
+        check(2, generated, "expectedMessage")
+        check(3, generated, "expectedMessage")
     }
 
     @Test
     fun `generates expected output for nested and bare types`() {
-        val generated = GenerateProtobufDsl.generate({
+        val generated = GenerateProtobufMessageDsl.generate({
             listOf(
                     ClassName("examplepackage", "Timestamp"),
                     ClassName("examplepackage", "Example1"),
@@ -37,6 +30,6 @@ class GenerateProtobufDslTest {
         }, "name")
 
         assertThat(generated.size, equalTo(1))
-        check(1, generated, "extended")
+        check(1, generated, "extendedMessage")
     }
 }

@@ -11,19 +11,21 @@ open class GenerateProtobufDslTask : DefaultTask() {
     var options: ProtokruftOptions = ProtokruftOptions()
 
     @TaskAction
-    fun action() = GenerateProtobufDsl.generate(GeneratedProtos(project, options.packageNames), options.outputClassFile)
-            .forEach {
-                val directory = options.outputDirectory(project)
-                project.logger.debug("Protokruft: writing ${it.packageName}.${it.name}.kt to ${directory.absolutePath}")
-                it.writeTo(directory)
-            }
+    fun action() {
+        GenerateProtobufMessageDsl.generate(GeneratedMessageProtos(project, options.packageNames), options.outputClassFile)
+                .forEach {
+                    val directory = options.outputDirectory(project)
+                    project.logger.debug("Protokruft: writing ${it.packageName}.${it.name}.kt to ${directory.absolutePath}")
+                    it.writeTo(directory)
+                }
+    }
 
     companion object {
         const val NAME = "generateProtobufDsl"
     }
 }
 
-fun GeneratedProtos(project: Project, packageNames: Set<String>?): TargetMessageClasses = {
+fun GeneratedMessageProtos(project: Project, packageNames: Set<String>?): TargetMessageClasses = {
 
     fun toClassName(pkg: String): (String) -> ClassName = {
         it.split('.').reversed()
