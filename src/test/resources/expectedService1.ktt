@@ -1,5 +1,17 @@
 package org.protokruft.example1
 
+import io.grpc.Channel
+
 interface CarService {
     fun getEngine(Car: Example1.Car): Example1.Engine
+
+    class Grpc : CarService {
+        private val stub: Channel
+
+        constructor(channel: Channel) {
+            stub = CarServiceBlockingStub(channel)
+        }
+
+        fun getEngine(Car: Example1.Car): Example1.Engine = stub.getEngine(Car})
+    }
 }
