@@ -23,7 +23,8 @@ repositories {
 }
 
 protokruft {
-    outputClassFile = "custom"
+    messagesClassFile = "customMessage"
+    servicesClassFile = "customService"
     packageNames = [ "org.protokruft.example3" ]
 }
 

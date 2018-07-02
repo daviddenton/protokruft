@@ -68,7 +68,7 @@ object GenerateProtobufServiceDsl {
                 }
 
         return classNames()
-                .filter { it.simpleName().endsWith("BlockingStub") }
+                .filter { it.simpleName().endsWith("Grpc") }
                 .groupBy { it.packageName() }
                 .map { (pkg, classes) ->
                     FileSpec.builder(pkg, outputFilename).apply {

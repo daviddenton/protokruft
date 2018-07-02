@@ -39,7 +39,7 @@ class ProtokruftPluginRealBuildTest {
 
         println(result.output)
 
-        val expected = File(testProjectDir.root, "build/generated/source/proto/main/java/org/protokruft/example3/custom.kt").readText()
+        val expected = File(testProjectDir.root, "build/generated/source/proto/main/java/org/protokruft/example3/customMessage.kt").readText()
         val excluded = File(testProjectDir.root, "build/generated/source/proto/main/java/org/protokruft/example2/custom.kt")
         assertThat(expected, equalTo(javaClass.getResourceAsStream("/expectedMessage3.ktt").reader().readText()))
         assertThat("excluded package was generated " + excluded.absolutePath, excluded.exists(), equalTo(false))
