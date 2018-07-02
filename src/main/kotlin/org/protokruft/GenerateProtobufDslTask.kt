@@ -30,34 +30,29 @@ fun GeneratedMessageProtos(project: Project, packageNames: Set<String>?): Target
 
     project.logger.debug("Protokruft: filtering classes to packages: " + (packageNames?.toString() ?: "*"))
 
-    project.generatedFiles()
-            .flatMap { file ->
-                project.logger.debug("Protokruft: processing: ${file.absolutePath}")
-                val input = file.readText()
+    project.generatedFiles().mapNotNull { file ->
+        project.logger.debug("Protokruft: processing: ${file.absolutePath}")
+        val input = file.readText()
 
-                Regex("package (.*);").find(input)?.let { it.groupValues[1] }?.let { pkg ->
-                    project.findAllClassesIn(Regex("public static (.*) parseFrom"), input, pkg).limitToPackages(project, pkg, packageNames)
-                } ?: emptyList<ClassName>().also {
-                    project.logger.warn("Protokruft: no package statement found in: ${file.absolutePath}")
-                }
-            }
+        Regex("package (.*);").find(input)?.let { it.groupValues[1] }?.let { pkg ->
+            project.findAllClassesIn(Regex("public static (.*) parseFrom"), input, pkg)
+                    .limitToPackages(project, pkg, packageNames)
+        }
+    }.flatten()
 }
 
 fun GeneratedServiceProtos(project: Project, packageNames: Set<String>?): TargetServiceClasses = {
 
     project.logger.info("Protokruft: filtering classes to packages: " + (packageNames?.toString() ?: "*"))
 
-    project.generatedFiles()
-            .flatMap { file ->
-                project.logger.info("Protokruft: processing: ${file.absolutePath}")
-                val input = file.readText()
+    project.generatedFiles().mapNotNull { file ->
+        project.logger.info("Protokruft: processing: ${file.absolutePath}")
+        val input = file.readText()
 
-                Regex("package (.*);").find(input)?.let { it.groupValues[1] }?.let { pkg ->
-                    project.findAllClassesIn(Regex("public static (.*) parseFrom"), input, pkg).limitToPackages(project, pkg, packageNames)
-                } ?: emptyList<ClassName>().also {
-                    project.logger.warn("Protokruft: no package statement found in: ${file.absolutePath}")
-                }
-            }
+        Regex("package (.*);").find(input)?.let { it.groupValues[1] }?.let { pkg ->
+            project.findAllClassesIn(Regex("public static (.*) parseFrom"), input, pkg).limitToPackages(project, pkg, packageNames)
+        }
+    }.flatten()
 }
 
 private fun List<String>.limitToPackages(project: Project, pkg: String, packageNames: Set<String>?) =
