@@ -12,8 +12,7 @@ open class GenerateProtobufDslTask : DefaultTask() {
     @TaskAction
     fun action() {
         val messages = GenerateProtobufMessageDsl.generate(GeneratedMessageProtos(project, options.packageNames), options.messagesClassFile)
-        val services = GenerateProtobufServiceDsl.generate(GeneratedServiceProtos(project, options.packageNames), options.servicesClassFile)
-        (messages + services)
+        messages
                 .forEach {
                     val directory = options.outputDirectory(project)
                     project.logger.info("Protokruft: writing ${it.packageName}.${it.name}.kt to ${directory.absolutePath}")
@@ -35,19 +34,6 @@ fun GeneratedMessageProtos(project: Project, packageNames: Set<String>?): Target
 
         Regex("package (.*);").find(input)?.let { it.groupValues[1] }?.let {
             Regex("public static (.*) parseFrom").findAllClassesIn(input, it).limitToPackages(project, it, packageNames)
-        }
-    }.flatten()
-}
-
-fun GeneratedServiceProtos(project: Project, packageNames: Set<String>?): TargetServiceClasses = {
-    project.logger.info("Protokruft: filtering Service classes to packages: " + (packageNames?.toString() ?: "*"))
-
-    project.generatedFiles().mapNotNull {
-        project.logger.info("Protokruft: processing: ${it.absolutePath}")
-        val input = it.readText()
-
-        Regex("package (.*);").find(input)?.let { it.groupValues[1] }?.let {
-            Regex("class (.*)BlockingStub").findAllClassesIn(input, it).limitToPackages(project, it, packageNames)
         }
     }.flatten()
 }
