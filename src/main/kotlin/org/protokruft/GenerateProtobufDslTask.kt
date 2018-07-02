@@ -35,8 +35,7 @@ fun GeneratedMessageProtos(project: Project, packageNames: Set<String>?): Target
         val input = it.readText()
 
         Regex("package (.*);").find(input)?.let { it.groupValues[1] }?.let {
-            project.findAllClassesIn(Regex("public static (.*) parseFrom"), input, it)
-                    .limitToPackages(project, it, packageNames)
+            Regex("public static (.*) parseFrom").findAllClassesIn(input, it).limitToPackages(project, it, packageNames)
         }
     }.flatten()
 }
@@ -50,7 +49,7 @@ fun GeneratedServiceProtos(project: Project, packageNames: Set<String>?): Target
         val input = it.readText()
 
         Regex("package (.*);").find(input)?.let { it.groupValues[1] }?.let {
-            project.findAllClassesIn(Regex("public static (.*) parseFrom"), input, it).limitToPackages(project, it, packageNames)
+            Regex("public static (.*) parseFrom").findAllClassesIn(input, it).limitToPackages(project, it, packageNames)
         }
     }.flatten()
 }
@@ -65,18 +64,12 @@ private fun Project.generatedFiles() =
                 .first() as GenerateProtoTask)
                 .outputSourceDirectorySet.map { it }
                 .filter { it.name.endsWith(".java") }
-                .also {
-                    project.logger.debug("Protokruft: found files: " + it.toString())
-                }
 
-private fun Project.findAllClassesIn(regex: Regex, input: String, pkg: String) = regex
-        .findAll(input).map { it.groupValues[1] }
-        .distinct()
-        .map { it.removePrefix("$pkg.") }
-        .toList()
-        .also {
-            logger.info("Protokruft: found classes: ${it.joinToString(", ")}")
-        }
+private fun Regex.findAllClassesIn(input: String, pkg: String) =
+        findAll(input).map { it.groupValues[1] }
+                .distinct()
+                .map { it.removePrefix("$pkg.") }
+                .toList()
 
 fun toClassNameFn(pkg: String): (String) -> ClassName = {
     it.split('.').reversed()
