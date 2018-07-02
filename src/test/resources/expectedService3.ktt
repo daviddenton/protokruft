@@ -6,12 +6,12 @@ interface CatService {
     fun getLeg(Cat: Example3.Cat): Example3.Leg
 
     class Grpc : CatService {
-        private val stub: Channel
+        private val stub: CatServiceGrpc.CatServiceBlockingStub
 
         constructor(channel: Channel) {
-            stub = CatServiceBlockingStub(channel)
+            stub = CatServiceGrpc.newBlockingStub(channel)
         }
 
-        fun getLeg(Cat: Example3.Cat): Example3.Leg = stub.getLeg(Cat})
+        override fun getLeg(cat: Example3.Cat): Example3.Leg = stub.getLeg(cat)
     }
 }

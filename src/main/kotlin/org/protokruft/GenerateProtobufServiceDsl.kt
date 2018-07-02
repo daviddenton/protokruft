@@ -5,6 +5,7 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FileSpec.Builder
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.ABSTRACT
+import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
@@ -42,19 +43,21 @@ object GenerateProtobufServiceDsl {
                                         .apply {
                                             addFunction(FunSpec.constructorBuilder().apply {
                                                 addParameter("channel", Channel::class.asTypeName())
-                                                        .addStatement("stub = ${interfaceName}BlockingStub(channel)")
+                                                        .addStatement("stub = ${clz.toSimpleNames().replace("BlockingStub", "Grpc")}.newBlockingStub(channel)")
                                             }.build())
                                             addSuperinterface(ClassName.bestGuess(interfaceName))
-                                            addProperty(PropertySpec.builder("stub", Channel::class.asTypeName()).addModifiers(PRIVATE).build())
+                                            addProperty(PropertySpec.builder("stub", clz).addModifiers(PRIVATE).build())
                                             methods.forEach {
                                                 addFunction(
                                                         FunSpec.builder(it.name).apply {
+                                                            addModifiers(OVERRIDE)
                                                             it.parameterTypes.forEach {
-                                                                addParameter(it.simpleName, it.asTypeName())
+                                                                addParameter(it.simpleName.toLowerCase(), it.asTypeName())
                                                             }
                                                             returns(it.returnType.asTypeName())
                                                         }
-                                                                .addStatement("return stub.${it.name}(${it.parameterTypes.map { it.simpleName }.joinToString(",")}})")
+                                                                .addStatement("return stub.${it.name}(${it.parameterTypes.joinToString(",")
+                                                                { it.simpleName.toLowerCase() }})")
                                                                 .build()
                                                 )
                                             }

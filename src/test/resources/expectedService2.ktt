@@ -6,12 +6,12 @@ interface PersonService {
     fun getAddress(Person: Example2.Person): Example2.Address
 
     class Grpc : PersonService {
-        private val stub: Channel
+        private val stub: PersonServiceGrpc.PersonServiceBlockingStub
 
         constructor(channel: Channel) {
-            stub = PersonServiceBlockingStub(channel)
+            stub = PersonServiceGrpc.newBlockingStub(channel)
         }
 
-        fun getAddress(Person: Example2.Person): Example2.Address = stub.getAddress(Person})
+        override fun getAddress(person: Example2.Person): Example2.Address = stub.getAddress(person)
     }
 }

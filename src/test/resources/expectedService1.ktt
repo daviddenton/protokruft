@@ -6,12 +6,12 @@ interface CarService {
     fun getEngine(Car: Example1.Car): Example1.Engine
 
     class Grpc : CarService {
-        private val stub: Channel
+        private val stub: CarServiceGrpc.CarServiceBlockingStub
 
         constructor(channel: Channel) {
-            stub = CarServiceBlockingStub(channel)
+            stub = CarServiceGrpc.newBlockingStub(channel)
         }
 
-        fun getEngine(Car: Example1.Car): Example1.Engine = stub.getEngine(Car})
+        override fun getEngine(car: Example1.Car): Example1.Engine = stub.getEngine(car)
     }
 }
