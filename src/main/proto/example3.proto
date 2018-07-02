@@ -3,6 +3,10 @@ syntax = "proto3";
 option java_package = "org.protokruft.example3";
 package AnExample3;
 
+service CatService {
+    rpc GetLeg (Cat) returns (Leg) {}
+}
+
 message Cat {
     message Leg {}
 }

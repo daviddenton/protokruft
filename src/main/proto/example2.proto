@@ -3,6 +3,10 @@ syntax = "proto3";
 option java_package = "org.protokruft.example2";
 package AnExample2;
 
+service PersonService {
+    rpc GetAddress (Person) returns (Address) {}
+}
+
 message Person {
     string name = 1;
     Address address = 2;

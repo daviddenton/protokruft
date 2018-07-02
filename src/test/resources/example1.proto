@@ -3,6 +3,10 @@ syntax = "proto3";
 option java_package = "org.protokruft.example1";
 package AnExample1;
 
+service CarService {
+    rpc GetEngine (Car) returns (Engine) {}
+}
+
 message Car {
     string model = 1;
     Engine engine = 2;
