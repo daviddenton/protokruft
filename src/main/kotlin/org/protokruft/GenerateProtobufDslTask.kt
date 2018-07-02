@@ -5,7 +5,6 @@ import com.squareup.kotlinpoet.ClassName
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.tasks.TaskAction
-import java.io.File
 
 open class GenerateProtobufDslTask : DefaultTask() {
     var options: ProtokruftOptions = ProtokruftOptions()
@@ -34,18 +33,10 @@ fun GeneratedMessageProtos(project: Project, packageNames: Set<String>?): Target
     project.generatedFiles()
             .flatMap { file ->
                 project.logger.debug("Protokruft: processing: ${file.absolutePath}")
-
                 val input = file.readText()
 
                 Regex("package (.*);").find(input)?.let { it.groupValues[1] }?.let { pkg ->
-
-                    project.findAllMessageClassesIn(input, pkg).map(toClassNameFn(pkg))
-                            .filter { clz ->
-                                packageNames?.any { clz.packageName().startsWith(it) } ?: true
-                            }
-                            .also {
-                                project.logger.debug("Protokruft: found classes to generate: " + it.toString())
-                            }
+                    project.findAllClassesIn(Regex("public static (.*) parseFrom"), input, pkg).limitToPackages(project, pkg, packageNames)
                 } ?: emptyList<ClassName>().also {
                     project.logger.warn("Protokruft: no package statement found in: ${file.absolutePath}")
                 }
@@ -59,24 +50,22 @@ fun GeneratedServiceProtos(project: Project, packageNames: Set<String>?): Target
     project.generatedFiles()
             .flatMap { file ->
                 project.logger.info("Protokruft: processing: ${file.absolutePath}")
-
                 val input = file.readText()
 
                 Regex("package (.*);").find(input)?.let { it.groupValues[1] }?.let { pkg ->
-                    project.findAllMessageClassesIn(input, pkg).map(toClassNameFn(pkg))
-                            .filter { clz ->
-                                packageNames?.any { clz.packageName().startsWith(it) } ?: true
-                            }
-                            .also {
-                                project.logger.info("Protokruft: found classes to generate: " + it.toString())
-                            }
+                    project.findAllClassesIn(Regex("public static (.*) parseFrom"), input, pkg).limitToPackages(project, pkg, packageNames)
                 } ?: emptyList<ClassName>().also {
                     project.logger.warn("Protokruft: no package statement found in: ${file.absolutePath}")
                 }
             }
 }
 
-fun Project.generatedFiles(): List<File> =
+private fun List<String>.limitToPackages(project: Project, pkg: String, packageNames: Set<String>?) =
+        map(toClassNameFn(pkg))
+                .filter { clz -> packageNames?.any { clz.packageName().startsWith(it) } ?: true }
+                .also { project.logger.debug("Protokruft: found classes to generate: " + it.toString()) }
+
+private fun Project.generatedFiles() =
         (getTasksByName("generateProto", false)
                 .first() as GenerateProtoTask)
                 .outputSourceDirectorySet.map { it }
@@ -85,8 +74,7 @@ fun Project.generatedFiles(): List<File> =
                     project.logger.debug("Protokruft: found files: " + it.toString())
                 }
 
-
-fun Project.findAllMessageClassesIn(input: String, pkg: String) = Regex("public static (.*) parseFrom")
+private fun Project.findAllClassesIn(regex: Regex, input: String, pkg: String) = regex
         .findAll(input).map { it.groupValues[1] }
         .distinct()
         .map { it.removePrefix("$pkg.") }
