@@ -34,7 +34,7 @@ class ProtokruftPluginRealBuildTest {
         val result = GradleRunner.create()
                 .withProjectDir(testProjectDir.root)
                 .withPluginClasspath(pluginClasspath)
-                .withArguments("clean", "generateProto", NAME, "--debug")
+                .withArguments("clean", "generateProto", NAME, "--info")
                 .build()
 
         println(result.output)
