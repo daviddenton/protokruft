@@ -3,7 +3,7 @@ package org.protokruft.example2
 import io.grpc.Channel
 
 interface PersonService {
-    fun getAddress(Person: Example2.Person): Example2.Address
+    fun getAddress(person: Example2.Person): Example2.Address
 
     class Grpc : PersonService {
         private val stub: PersonServiceGrpc.PersonServiceBlockingStub

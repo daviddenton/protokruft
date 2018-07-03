@@ -11,29 +11,34 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asTypeName
 import io.grpc.Channel
-import java.lang.reflect.Modifier
 
-typealias TargetServiceClasses = () -> Iterable<ClassName>
+//public static io.grpc.MethodDescriptor<org.protokruft.example1.Example1.Car,
+//      org.protokruft.example1.Example1.Engine> getGetEngineMethod()
+
+data class GrpcMethod(val name: String, val parameters: List<ClassName>, val returnType: ClassName)
+
+data class GrpcService(val className: ClassName, val methods: List<GrpcMethod>)
+
+typealias TargetServiceClasses = () -> Iterable<GrpcService>
 
 object GenerateProtobufServiceDsl {
     fun generate(
             classNames: TargetServiceClasses,
             outputFilename: String,
-            nameFn: (ClassName) -> String = { it.toSimpleNames().replace("BlockingStub", "") }
+            nameFn: (ClassName) -> String = { it.toSimpleNames().replace("Grpc", "") }
     ): List<FileSpec> {
-        fun Builder.generateFunctionFor(clz: ClassName) =
+        fun Builder.generateFunctionFor(service: GrpcService) =
                 apply {
-                    val methods = Class.forName(clz.reflectionName()).declaredMethods.filter { Modifier.isPublic(it.modifiers) }
-                    val interfaceName = nameFn(clz)
+                    val interfaceName = nameFn(service.className)
                     addType(TypeSpec.interfaceBuilder(interfaceName).apply {
-                        methods.forEach {
+                        service.methods.forEach {
                             addFunction(
                                     FunSpec.builder(it.name).apply {
                                         addModifiers(ABSTRACT)
-                                        it.parameterTypes.forEach {
-                                            addParameter(it.simpleName, it.asTypeName())
+                                        it.parameters.forEach {
+                                            addParameter(it.simpleName().decapitalize(), it)
                                         }
-                                        returns(it.returnType.asTypeName())
+                                        returns(it.returnType)
                                     }.build()
                             )
                         }
@@ -43,21 +48,21 @@ object GenerateProtobufServiceDsl {
                                         .apply {
                                             addFunction(FunSpec.constructorBuilder().apply {
                                                 addParameter("channel", Channel::class.asTypeName())
-                                                        .addStatement("stub = ${clz.toSimpleNames().replace("BlockingStub", "Grpc")}.newBlockingStub(channel)")
+                                                        .addStatement("stub = ${service.className.simpleName()}.newBlockingStub(channel)")
                                             }.build())
                                             addSuperinterface(ClassName.bestGuess(interfaceName))
-                                            addProperty(PropertySpec.builder("stub", clz).addModifiers(PRIVATE).build())
-                                            methods.forEach {
+                                            addProperty(PropertySpec.builder("stub", service.className.nestedClass(nameFn(service.className)+"BlockingStub")).addModifiers(PRIVATE).build())
+                                            service.methods.forEach {
                                                 addFunction(
                                                         FunSpec.builder(it.name).apply {
                                                             addModifiers(OVERRIDE)
-                                                            it.parameterTypes.forEach {
-                                                                addParameter(it.simpleName.toLowerCase(), it.asTypeName())
+                                                            it.parameters.forEach {
+                                                                addParameter(it.simpleName().decapitalize(), it)
                                                             }
-                                                            returns(it.returnType.asTypeName())
+                                                            returns(it.returnType)
                                                         }
-                                                                .addStatement("return stub.${it.name}(${it.parameterTypes.joinToString(",")
-                                                                { it.simpleName.toLowerCase() }})")
+                                                                .addStatement("return stub.${it.name}(${it.parameters.joinToString(",")
+                                                                { it.simpleName().decapitalize() }})")
                                                                 .build()
                                                 )
                                             }
@@ -68,11 +73,10 @@ object GenerateProtobufServiceDsl {
                 }
 
         return classNames()
-                .filter { it.simpleName().endsWith("BlockingStub") }
-                .groupBy { it.packageName() }
+                .groupBy { it.className.packageName() }
                 .map { (pkg, classes) ->
                     FileSpec.builder(pkg, outputFilename).apply {
-                        classes.sortedBy { it.reflectionName() }.forEach { generateFunctionFor(it) }
+                        classes.sortedBy { it.className.simpleName() }.forEach { generateFunctionFor(it) }
                     }.build()
                 }
     }
