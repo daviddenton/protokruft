@@ -23,7 +23,7 @@ typealias TargetServiceClasses = () -> Iterable<GrpcService>
 
 object GenerateProtobufServiceDsl {
     fun generate(
-            classNames: TargetServiceClasses,
+            services: TargetServiceClasses,
             outputFilename: String,
             nameFn: (ClassName) -> String = { it.toSimpleNames().replace("Grpc", "") }
     ): List<FileSpec> {
@@ -72,7 +72,7 @@ object GenerateProtobufServiceDsl {
                     }.build())
                 }
 
-        return classNames()
+        return services()
                 .groupBy { it.className.packageName() }
                 .map { (pkg, classes) ->
                     FileSpec.builder(pkg, outputFilename).apply {
