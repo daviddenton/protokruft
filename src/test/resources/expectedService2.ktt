@@ -2,10 +2,10 @@ package org.protokruft.example2
 
 import io.grpc.Channel
 
-interface PersonService {
+interface PersonServiceClient {
     fun getAddress(person: Example2.Person): Example2.Address
 
-    class Grpc : PersonService {
+    class Grpc : PersonServiceClient {
         private val stub: PersonServiceGrpc.PersonServiceBlockingStub
 
         constructor(channel: Channel) {

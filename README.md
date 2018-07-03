@@ -105,8 +105,10 @@ Merge the following sections into your Gradle file. This assumes that you've alr
 
     protokruft {
         packageNames = ["com.mygreatpackage"] // "*" by default
-        messagesClassFile = "customMessage" // "messageDsl" by default
-        servicesClassFile = "customService" // "serviceDsl" by default
+        messageClassFile = "customMessage" // "messageDsl" by default
+        messageDslPrefix = "customPrefix" // "new" by default
+        serviceClassFile = "customService" // "serviceDsl" by default
+        serviceDslSuffix = "CustomSuffix" // "" by default
     }
 
     // allows you to just run generateProtoDsl

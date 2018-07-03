@@ -9,7 +9,7 @@ import org.junit.Test
 class GenerateProtobufMessageDslTest {
     @Test
     fun `generates expected output for multiple packages`() {
-        val generated = GenerateProtobufMessageDsl.generate(ScanClasspathFor("org.protokruft", GeneratedMessageV3::class.java), "name")
+        val generated = GenerateProtobufMessageDsl.generate(ScanClasspathFor("org.protokruft", GeneratedMessageV3::class.java), "name", "newnew")
 
         assertThat(generated.size, equalTo(3))
         check(1, generated, "expectedMessage")
@@ -27,7 +27,7 @@ class GenerateProtobufMessageDslTest {
                     ClassName("examplepackage", "Example1.Bob"),
                     ClassName("examplepackage", "Example1.Bob.Bill")
             )
-        }, "name")
+        }, "name", "newnew")
 
         assertThat(generated.size, equalTo(1))
         check(1, generated, "extendedMessage")

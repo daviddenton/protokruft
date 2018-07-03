@@ -16,7 +16,8 @@ object GenerateProtobufMessageDsl {
     fun generate(
             classNames: TargetMessageClasses,
             outputFilename: String,
-            nameFn: (ClassName) -> String = { "new${it.toSimpleNames()}" }
+            messageDslPrefix: String = "new",
+            nameFn: (ClassName) -> String = { "$messageDslPrefix${it.toSimpleNames()}" }
     ): List<FileSpec> {
         fun Builder.generateFunctionFor(clz: ClassName) =
                 apply {

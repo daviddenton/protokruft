@@ -2,10 +2,10 @@ package org.protokruft.example3
 
 import io.grpc.Channel
 
-interface CatService {
+interface CatServiceClient {
     fun getLeg(cat: Example3.Cat): Example3.Leg
 
-    class Grpc : CatService {
+    class Grpc : CatServiceClient {
         private val stub: CatServiceGrpc.CatServiceBlockingStub
 
         constructor(channel: Channel) {

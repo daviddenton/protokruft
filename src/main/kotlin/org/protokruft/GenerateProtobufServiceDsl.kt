@@ -12,9 +12,6 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asTypeName
 import io.grpc.Channel
 
-//public static io.grpc.MethodDescriptor<org.protokruft.example1.Example1.Car,
-//      org.protokruft.example1.Example1.Engine> getGetEngineMethod()
-
 data class GrpcMethod(val name: String, val parameters: List<ClassName>, val returnType: ClassName)
 
 data class GrpcService(val className: ClassName, val methods: List<GrpcMethod>)
@@ -25,7 +22,8 @@ object GenerateProtobufServiceDsl {
     fun generate(
             services: TargetServiceClasses,
             outputFilename: String,
-            nameFn: (ClassName) -> String = { it.toSimpleNames().replace("Grpc", "") }
+            serviceDslSuffix: String = "",
+            nameFn: (ClassName) -> String = { it.toSimpleNames().replace("Grpc", serviceDslSuffix) }
     ): List<FileSpec> {
         fun Builder.generateFunctionFor(service: GrpcService) =
                 apply {
@@ -51,7 +49,7 @@ object GenerateProtobufServiceDsl {
                                                         .addStatement("stub = ${service.className.simpleName()}.newBlockingStub(channel)")
                                             }.build())
                                             addSuperinterface(ClassName.bestGuess(interfaceName))
-                                            addProperty(PropertySpec.builder("stub", service.className.nestedClass(nameFn(service.className)+"BlockingStub")).addModifiers(PRIVATE).build())
+                                            addProperty(PropertySpec.builder("stub", service.className.nestedClass(nameFn(service.className).removeSuffix(serviceDslSuffix) + "BlockingStub")).addModifiers(PRIVATE).build())
                                             service.methods.forEach {
                                                 addFunction(
                                                         FunSpec.builder(it.name).apply {

@@ -2,7 +2,7 @@ package org.protokruft.example3
 
 import kotlin.Unit
 
-object newCat {
+object newnewCat {
     private fun new(): Example3.Cat.Builder = org.protokruft.example3.Example3.Cat.newBuilder()
 
     operator fun invoke(fn: Example3.Cat.Builder.() -> Unit): Example3.Cat = new().apply(fn).build()
@@ -12,7 +12,7 @@ object newCat {
     fun also(fn: (Example3.Cat.Builder) -> Unit): Example3.Cat = new().apply(fn).build()
 }
 
-object newCatLeg {
+object newnewCatLeg {
     private fun new(): Example3.Cat.Leg.Builder = org.protokruft.example3.Example3.Cat.Leg.newBuilder()
 
     operator fun invoke(fn: Example3.Cat.Leg.Builder.() -> Unit): Example3.Cat.Leg = new().apply(fn).build()
@@ -22,7 +22,7 @@ object newCatLeg {
     fun also(fn: (Example3.Cat.Leg.Builder) -> Unit): Example3.Cat.Leg = new().apply(fn).build()
 }
 
-object newLeg {
+object newnewLeg {
     private fun new(): Example3.Leg.Builder = org.protokruft.example3.Example3.Leg.newBuilder()
 
     operator fun invoke(fn: Example3.Leg.Builder.() -> Unit): Example3.Leg = new().apply(fn).build()
