@@ -47,16 +47,15 @@ fun GeneratedServiceProtos(project: Project, packageNames: Set<String>?): Target
         project.logger.info("Protokruft: processing: ${file.absolutePath}")
         val input = file.readText()
         Regex("package (.*);").find(input)?.let { it.groupValues[1] }?.let {
-            GrpcService(ClassName(it, (file.nameWithoutExtension)),
-                    Regex("""public static io.grpc.MethodDescriptor<(.*),\s+(.*)>\s+get(.*)\(\)""").findAll(input).map {
-                        GrpcMethod(it.groupValues[3].replace("get", "").decapitalize(), listOf(bestGuess(it.groupValues[3])), bestGuess(it.groupValues[2]))
-                    }.toList()
-            )
+            val map = Regex("""public static io.grpc.MethodDescriptor<(.*),\s+(.*)>\s+get(.*)Method\(\)""").findAll(input).map {
+                GrpcMethod(it.groupValues[3].replace("get", "").decapitalize(), listOf(bestGuess(it.groupValues[1])), bestGuess(it.groupValues[2]))
+            }
+
+            if (map.toList().isEmpty()) null else {
+                GrpcService(ClassName(it, (file.nameWithoutExtension)), map.toList())
+            }
         }
-    }.filter {
-        println(it)
-        packageNames?.contains(it.className.packageName()) ?: true
-    }
+    }.filter { packageNames?.contains(it.className.packageName()) ?: true }
 }
 
 private fun List<String>.limitToPackages(project: Project, pkg: String, packageNames: Set<String>?) =
@@ -79,7 +78,7 @@ private fun Regex.findAllClassesIn(input: String, pkg: String): List<String> {
             .toList()
 }
 
-fun toClassNameFn(pkg: String): (String) -> ClassName = {
+private fun toClassNameFn(pkg: String): (String) -> ClassName = {
     it.split('.').reversed()
             .let { ClassName(pkg, it.last(), *it.dropLast(1).reversed().toTypedArray()) }
 }

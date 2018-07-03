@@ -39,10 +39,14 @@ class ProtokruftPluginRealBuildTest {
 
         println(result.output)
 
-        val expected = File(testProjectDir.root, "build/generated/source/proto/main/java/org/protokruft/example3/customMessage.kt").readText()
-        val excluded = File(testProjectDir.root, "build/generated/source/proto/main/java/org/protokruft/example2/custom.kt")
-        assertThat(expected, equalTo(javaClass.getResourceAsStream("/expectedMessage3.ktt").reader().readText()))
-        assertThat("excluded package was generated " + excluded.absolutePath, excluded.exists(), equalTo(false))
+        val expectedMessage = File(testProjectDir.root, "build/generated/source/proto/main/java/org/protokruft/example3/customMessage.kt").readText()
+        val excludedMessage = File(testProjectDir.root, "build/generated/source/proto/main/java/org/protokruft/example2/custom.kt")
+        val expectedService = File(testProjectDir.root, "build/generated/source/proto/main/java/org/protokruft/example3/customService.kt").readText()
+        val excludedService = File(testProjectDir.root, "build/generated/source/proto/main/java/org/protokruft/example2/customService.kt")
+        assertThat(expectedMessage, equalTo(javaClass.getResourceAsStream("/expectedMessage3.ktt").reader().readText()))
+        assertThat("excluded package was generated " + excludedMessage.absolutePath, excludedMessage.exists(), equalTo(false))
+        assertThat(expectedService, equalTo(javaClass.getResourceAsStream("/expectedService3.ktt").reader().readText()))
+        assertThat("excluded package was generated " + excludedService.absolutePath, excludedService.exists(), equalTo(false))
     }
 
     private fun resourceTo(file: String, dir: File) {
