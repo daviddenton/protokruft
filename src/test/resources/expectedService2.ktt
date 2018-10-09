@@ -1,17 +1,27 @@
 package org.protokruft.example2
 
 import io.grpc.Channel
+import io.grpc.stub.StreamObserver
 
-interface PersonServiceClient {
+interface PersonService {
     fun getAddress(person: Example2.Person): Example2.Address
 
-    class Grpc : PersonServiceClient {
-        private val stub: PersonServiceGrpc.PersonServiceBlockingStub
+    object Grpc {
+        class Client : PersonService {
+            private val stub: PersonServiceGrpc.PersonServiceBlockingStub
 
-        constructor(channel: Channel) {
-            stub = PersonServiceGrpc.newBlockingStub(channel)
+            constructor(channel: Channel) {
+                stub = PersonServiceGrpc.newBlockingStub(channel)
+            }
+
+            override fun getAddress(person: Example2.Person): Example2.Address = stub.getAddress(person)
         }
 
-        override fun getAddress(person: Example2.Person): Example2.Address = stub.getAddress(person)
+        class Server(private val delegate: PersonService) : PersonServiceGrpc.PersonServiceImplBase() {
+            override fun getAddress(person: Example2.Person, responseObserver: StreamObserver<Example2.Address>) {
+                responseObserver.onNext(delegate.getAddress(person))
+                responseObserver.onCompleted()
+            }
+        }
     }
 }

@@ -25,7 +25,7 @@ class GenerateProtobufServiceDslTest {
                     GrpcService(asClassName<PersonServiceGrpc>(), listOf(GrpcMethod("getAddress", listOf(asClassName<Person>()), asClassName<Address>()))),
                     GrpcService(asClassName<CatServiceGrpc>(), listOf(GrpcMethod("getLeg", listOf(asClassName<Cat>()), asClassName<Leg>())))
             )
-        }, "name", "Client")
+        }, "name", "")
         assertThat(generated.size, equalTo(3))
         check(1, generated, "expectedService")
         check(2, generated, "expectedService")

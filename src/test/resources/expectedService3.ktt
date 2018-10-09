@@ -1,17 +1,27 @@
 package org.protokruft.example3
 
 import io.grpc.Channel
+import io.grpc.stub.StreamObserver
 
-interface CatServiceClient {
+interface CatService {
     fun getLeg(cat: Example3.Cat): Example3.Leg
 
-    class Grpc : CatServiceClient {
-        private val stub: CatServiceGrpc.CatServiceBlockingStub
+    object Grpc {
+        class Client : CatService {
+            private val stub: CatServiceGrpc.CatServiceBlockingStub
 
-        constructor(channel: Channel) {
-            stub = CatServiceGrpc.newBlockingStub(channel)
+            constructor(channel: Channel) {
+                stub = CatServiceGrpc.newBlockingStub(channel)
+            }
+
+            override fun getLeg(cat: Example3.Cat): Example3.Leg = stub.getLeg(cat)
         }
 
-        override fun getLeg(cat: Example3.Cat): Example3.Leg = stub.getLeg(cat)
+        class Server(private val delegate: CatService) : CatServiceGrpc.CatServiceImplBase() {
+            override fun getLeg(cat: Example3.Cat, responseObserver: StreamObserver<Example3.Leg>) {
+                responseObserver.onNext(delegate.getLeg(cat))
+                responseObserver.onCompleted()
+            }
+        }
     }
 }

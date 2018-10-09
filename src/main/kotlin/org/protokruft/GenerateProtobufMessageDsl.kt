@@ -64,7 +64,7 @@ object GenerateProtobufMessageDsl {
                 }
 
         return classNames()
-                .groupBy { it.packageName() }
+                .groupBy { it.packageName }
                 .map { (pkg, classes) ->
                     FileSpec.builder(pkg, outputFilename).apply {
                         classes.sortedBy { it.reflectionName() }.forEach { generateFunctionFor(it) }
