@@ -1,14 +1,18 @@
 package org.protokruft
 
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FileSpec.Builder
-import com.squareup.kotlinpoet.KModifier.*
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier.ABSTRACT
+import com.squareup.kotlinpoet.KModifier.OVERRIDE
+import com.squareup.kotlinpoet.KModifier.PRIVATE
+import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.asTypeName
 import io.grpc.Channel
-
-data class GrpcMethod(val name: String, val parameters: List<ClassName>, val returnType: ClassName)
-
-data class GrpcService(val className: ClassName, val methods: List<GrpcMethod>)
 
 typealias TargetServiceClasses = () -> Iterable<GrpcService>
 
@@ -35,8 +39,6 @@ object GenerateProtobufServiceDsl {
                                 }.build()
                         )
                     }
-
-
 
                     addType(TypeSpec.objectBuilder("Grpc")
                             .addType(
