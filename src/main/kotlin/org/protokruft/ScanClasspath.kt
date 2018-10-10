@@ -12,5 +12,5 @@ fun ScanClasspathFor(pkg: String, clazz: Class<*>): () -> List<ClassName> = {
 }
 
 fun ClassName.toSimpleNames() = reflectionName().run {
-    if (contains("$")) substringAfter("$").replace("$", "") else simpleName()
+    if (contains("$")) substringAfter("$").replace("$", "") else simpleName
 }.replace(".", "")

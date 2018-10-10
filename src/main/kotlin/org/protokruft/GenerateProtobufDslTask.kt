@@ -55,12 +55,12 @@ fun GeneratedServiceProtos(project: Project, packageNames: Set<String>?): Target
                 GrpcService(ClassName(it, (file.nameWithoutExtension)), map.toList())
             }
         }
-    }.filter { packageNames?.contains(it.className.packageName()) ?: true }
+    }.filter { packageNames?.contains(it.className.packageName) ?: true }
 }
 
 private fun List<String>.limitToPackages(project: Project, pkg: String, packageNames: Set<String>?) =
         map(toClassNameFn(pkg))
-                .filter { clz -> packageNames?.any { clz.packageName().startsWith(it) } ?: true }
+                .filter { clz -> packageNames?.any { clz.packageName.startsWith(it) } ?: true }
                 .also { project.logger.info("Protokruft: found classes to generate: " + it.toString()) }
 
 private fun Project.generatedFiles() =
