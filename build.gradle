@@ -1,6 +1,6 @@
 buildscript {
-    ext.kotlin_version = '1.2.50'
-    ext.grpc_version = '1.13.1'
+    ext.kotlin_version = '1.2.70'
+    ext.grpc_version = '1.15.1'
 
     repositories {
         mavenCentral()
@@ -9,7 +9,7 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.3'
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.6'
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.9.6"
         classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:2.2.+'
     }
@@ -102,7 +102,7 @@ dependencies {
     compile "org.reflections:reflections:0.9.11"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    compile 'com.google.protobuf:protobuf-java:3.5.1'
+    compile 'com.google.protobuf:protobuf-java:3.6.1'
     compile "io.grpc:grpc-protobuf:$grpc_version"
     compile "io.grpc:grpc-stub:$grpc_version"
     compile "io.grpc:grpc-core:$grpc_version"
