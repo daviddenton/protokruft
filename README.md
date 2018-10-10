@@ -74,18 +74,28 @@ For services, Protokruft generates this interface which wraps the final class ge
 interface CarService {
     fun getEngine(car: Example1.Car): Example1.Engine
 
-    class Grpc : CarService {
-        private val stub: CarServiceGrpc.CarServiceBlockingStub
+    object Grpc {
+        class Client : CarService {
+            private val stub: CarServiceGrpc.CarServiceBlockingStub
 
-        constructor(channel: Channel) {
-            stub = CarServiceGrpc.newBlockingStub(channel)
+            constructor(channel: Channel) {
+                stub = CarServiceGrpc.newBlockingStub(channel)
+            }
+
+            override fun getEngine(car: Example1.Car): Example1.Engine = stub.getEngine(car)
         }
 
-        override fun getEngine(car: Example1.Car): Example1.Engine = stub.getEngine(car)
+        class Server(private val delegate: CarService) : CarServiceGrpc.CarServiceImplBase() {
+            override fun getEngine(car: Example1.Car, responseObserver: StreamObserver<Example1.Engine>) {
+                responseObserver.onNext(delegate.getEngine(car))
+                responseObserver.onCompleted()
+            }
+        }
     }
 }
 
-val newBlockingStub = CarService.Grpc(channel)
+val newBlockingStub = CarService.Grpc.Client(channel)
+val grpcService= CarService.Grpc.Server(myCarServiceImplementation)
 ```
 
 ## Use it:
