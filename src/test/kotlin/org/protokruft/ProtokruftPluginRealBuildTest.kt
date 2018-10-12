@@ -1,6 +1,7 @@
 package org.protokruft
 
 import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.containsSubstring
 import com.natpryce.hamkrest.equalTo
 import org.apache.commons.io.FileUtils
 import org.gradle.testkit.runner.GradleRunner
@@ -47,6 +48,25 @@ class ProtokruftPluginRealBuildTest {
         assertThat("excluded package was generated " + excludedMessage.absolutePath, excludedMessage.exists(), equalTo(false))
         assertThat(expectedService, equalTo(javaClass.getResourceAsStream("/expectedService3.ktt").reader().readText()))
         assertThat("excluded package was generated " + excludedService.absolutePath, excludedService.exists(), equalTo(false))
+    }
+
+    @Test
+    fun generatesOutputForProtobufFilesIncrementally() {
+        GradleRunner.create()
+            .withProjectDir(testProjectDir.root)
+            .withPluginClasspath(pluginClasspath)
+            .withArguments("clean", "generateProto", NAME, "--info")
+            .build()
+
+        val result = GradleRunner.create()
+            .withProjectDir(testProjectDir.root)
+            .withPluginClasspath(pluginClasspath)
+            .withArguments("generateProto", NAME, "--info")
+            .build()
+
+        println(result.output)
+
+        assertThat(result.output, containsSubstring("Task :generateProtobufDsl UP-TO-DATE"))
     }
 
     private fun resourceTo(file: String, dir: File) {

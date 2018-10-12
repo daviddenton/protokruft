@@ -5,10 +5,18 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ClassName.Companion.bestGuess
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
 
 open class GenerateProtobufDslTask : DefaultTask() {
     var options: ProtokruftOptions = ProtokruftOptions()
+
+    @InputFiles
+    fun inputFiles() = project.generatedFiles()
+
+    @OutputDirectory
+    fun getOutputDirectory() = options.outputDirectory(project)
 
     @TaskAction
     fun action() {
