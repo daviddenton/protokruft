@@ -35,6 +35,7 @@ message Engine {
 The generated Java code from the Google protoc would be used like this:
 
 ```kotlin
+
     val person = Person.newBuilder()
             .setName("Hello Kitty")
             .setAddress(
@@ -58,6 +59,7 @@ Sprinkle on some Protokruft, and you can use it like this to hide the `newBuilde
     }
 ```
 ... or like this to scope the `Builder` as `it`: 
+
 ```kotlin    
     val personScoped = newPerson.also {
         it.name = "Hello Kitty"
