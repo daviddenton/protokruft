@@ -30,7 +30,8 @@ message Car {
 message Engine {
     int32 cc = 1;
     int32 bhp = 2;
-}```
+}
+```
 
 The generated Java code from the Google protoc would be used like this:
 
