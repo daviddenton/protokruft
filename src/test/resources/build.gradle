@@ -24,7 +24,7 @@ repositories {
 
 protokruft {
     messagesClassFile = "customMessage"
-    messageDslPrefix = "newnew"
+    messageDslPrefix = "prefix"
     servicesClassFile = "customService"
     serviceDslSuffix = ""
     packageNames = [ "org.protokruft.example3" ]

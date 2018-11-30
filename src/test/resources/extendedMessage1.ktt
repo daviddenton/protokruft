@@ -2,7 +2,7 @@ package examplepackage
 
 import kotlin.Unit
 
-object newnewExample1 {
+object prefixExample1 {
     private fun new(): Example1.Builder = examplepackage.Example1.newBuilder()
 
     operator fun invoke(fn: Example1.Builder.() -> Unit): Example1 = new().apply(fn).build()
@@ -12,7 +12,7 @@ object newnewExample1 {
     fun also(fn: (Example1.Builder) -> Unit): Example1 = new().apply(fn).build()
 }
 
-object newnewExample1Bob {
+object prefixExample1Bob {
     private fun new(): Example1.Bob.Builder = examplepackage.Example1.Bob.newBuilder()
 
     operator fun invoke(fn: Example1.Bob.Builder.() -> Unit): Example1.Bob = new().apply(fn).build()
@@ -22,7 +22,7 @@ object newnewExample1Bob {
     fun also(fn: (Example1.Bob.Builder) -> Unit): Example1.Bob = new().apply(fn).build()
 }
 
-object newnewExample1Bob {
+object prefixExample1Bob {
     private fun new(): Example1.Bob.Builder = examplepackage.Example1.Bob.newBuilder()
 
     operator fun invoke(fn: Example1.Bob.Builder.() -> Unit): Example1.Bob = new().apply(fn).build()
@@ -32,7 +32,7 @@ object newnewExample1Bob {
     fun also(fn: (Example1.Bob.Builder) -> Unit): Example1.Bob = new().apply(fn).build()
 }
 
-object newnewExample1BobBill {
+object prefixExample1BobBill {
     private fun new(): Example1.Bob.Bill.Builder = examplepackage.Example1.Bob.Bill.newBuilder()
 
     operator fun invoke(fn: Example1.Bob.Bill.Builder.() -> Unit): Example1.Bob.Bill = new().apply(fn).build()
@@ -42,7 +42,7 @@ object newnewExample1BobBill {
     fun also(fn: (Example1.Bob.Bill.Builder) -> Unit): Example1.Bob.Bill = new().apply(fn).build()
 }
 
-object newnewTimestamp {
+object prefixTimestamp {
     private fun new(): Timestamp.Builder = examplepackage.Timestamp.newBuilder()
 
     operator fun invoke(fn: Timestamp.Builder.() -> Unit): Timestamp = new().apply(fn).build()
