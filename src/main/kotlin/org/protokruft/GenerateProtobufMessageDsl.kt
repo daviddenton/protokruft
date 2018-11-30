@@ -1,14 +1,9 @@
 package org.protokruft
 
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.FileSpec.Builder
-import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.OPERATOR
 import com.squareup.kotlinpoet.KModifier.PRIVATE
-import com.squareup.kotlinpoet.LambdaTypeName
-import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.asTypeName
 
 typealias TargetMessageClasses = () -> Iterable<ClassName>
 

@@ -14,6 +14,7 @@ object GenerateProtobufServiceDsl {
             services: TargetServiceClasses,
             outputFilename: String,
             serviceDslSuffix: String = "",
+            markerInterface: String? = null,
             nameFn: (ClassName) -> String = { it.toSimpleNames().replace("Grpc", serviceDslSuffix) }
     ): List<FileSpec> {
 
@@ -22,6 +23,7 @@ object GenerateProtobufServiceDsl {
             return apply {
                 val interfaceName = ClassName.bestGuess(nameFn(service.className))
                 addType(TypeSpec.interfaceBuilder(interfaceName)
+                        .apply { markerInterface?.let { addSuperinterface(ClassName.bestGuess(markerInterface)) } }
                         .apply { buildInterface(service) }
                         .apply { addType(buildGrpcObject(service, interfaceName, serviceName)) }.build())
             }

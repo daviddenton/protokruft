@@ -1,9 +1,10 @@
 package org.protokruft.example2
 
+import com.mygreat.Interface
 import io.grpc.Channel
 import io.grpc.stub.StreamObserver
 
-interface PersonService {
+interface PersonService : Interface {
     fun getAddress(person: Example2.Person): Example2.Address
 
     object Grpc {

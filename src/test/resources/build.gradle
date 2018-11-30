@@ -27,6 +27,7 @@ protokruft {
     messageDslPrefix = "prefix"
     servicesClassFile = "customService"
     serviceDslSuffix = ""
+    markerInterface = "com.mygreat.Interface"
     packageNames = [ "org.protokruft.example3" ]
 }
 

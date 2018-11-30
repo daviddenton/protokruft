@@ -1,9 +1,10 @@
 package org.protokruft.example1
 
+import com.mygreat.Interface
 import io.grpc.Channel
 import io.grpc.stub.StreamObserver
 
-interface CarService {
+interface CarService : Interface {
     fun getEngine(car: Example1.Car): Example1.Engine
 
     object Grpc {

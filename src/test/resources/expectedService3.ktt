@@ -1,9 +1,10 @@
 package org.protokruft.example3
 
+import com.mygreat.Interface
 import io.grpc.Channel
 import io.grpc.stub.StreamObserver
 
-interface CatService {
+interface CatService : Interface {
     fun getLeg(cat: Example3.Cat): Example3.Leg
 
     object Grpc {

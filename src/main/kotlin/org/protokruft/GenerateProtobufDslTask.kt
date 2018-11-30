@@ -21,7 +21,7 @@ open class GenerateProtobufDslTask : DefaultTask() {
     @TaskAction
     fun action() {
         val messages = GenerateProtobufMessageDsl.generate(GeneratedMessageProtos(project, options.packageNames), options.messagesClassFile, options.messageDslPrefix)
-        val services = GenerateProtobufServiceDsl.generate(GeneratedServiceProtos(project, options.packageNames), options.servicesClassFile, options.serviceDslSuffix)
+        val services = GenerateProtobufServiceDsl.generate(GeneratedServiceProtos(project, options.packageNames), options.servicesClassFile, options.serviceDslSuffix, options.markerInterface)
         (messages + services)
                 .forEach {
                     val directory = options.outputDirectory(project)
