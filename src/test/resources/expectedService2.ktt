@@ -7,14 +7,13 @@ interface PersonService {
     fun getAddress(person: Example2.Person): Example2.Address
 
     object Grpc {
-        class Client : PersonService {
-            private val stub: PersonServiceGrpc.PersonServiceBlockingStub
-
-            constructor(channel: Channel) {
-                stub = PersonServiceGrpc.newBlockingStub(channel)
+        object Client {
+            operator fun invoke(channel: Channel): PersonService {
+                val stub = PersonServiceGrpc.newBlockingStub(channel)
+                return object : PersonService {
+                            override fun getAddress(person: org.protokruft.example2.Example2.Person): org.protokruft.example2.Example2.Address = stub.getAddress(person)
+                        }
             }
-
-            override fun getAddress(person: Example2.Person): Example2.Address = stub.getAddress(person)
         }
 
         class Server(private val delegate: PersonService) : PersonServiceGrpc.PersonServiceImplBase() {

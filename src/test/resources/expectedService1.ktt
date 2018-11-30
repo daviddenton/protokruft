@@ -7,14 +7,13 @@ interface CarService {
     fun getEngine(car: Example1.Car): Example1.Engine
 
     object Grpc {
-        class Client : CarService {
-            private val stub: CarServiceGrpc.CarServiceBlockingStub
-
-            constructor(channel: Channel) {
-                stub = CarServiceGrpc.newBlockingStub(channel)
+        object Client {
+            operator fun invoke(channel: Channel): CarService {
+                val stub = CarServiceGrpc.newBlockingStub(channel)
+                return object : CarService {
+                            override fun getEngine(car: org.protokruft.example1.Example1.Car): org.protokruft.example1.Example1.Engine = stub.getEngine(car)
+                        }
             }
-
-            override fun getEngine(car: Example1.Car): Example1.Engine = stub.getEngine(car)
         }
 
         class Server(private val delegate: CarService) : CarServiceGrpc.CarServiceImplBase() {
