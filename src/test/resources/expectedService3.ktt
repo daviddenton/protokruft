@@ -1,8 +1,8 @@
 package org.protokruft.example3
 
 import com.mygreat.Interface
+import io.gprc.BindableService
 import io.grpc.Channel
-import io.grpc.stub.StreamObserver
 
 interface CatService : Interface {
     fun getLeg(cat: Example3.Cat): Example3.Leg
@@ -17,10 +17,12 @@ interface CatService : Interface {
             }
         }
 
-        class Server(private val delegate: CatService) : CatServiceGrpc.CatServiceImplBase() {
-            override fun getLeg(cat: Example3.Cat, responseObserver: StreamObserver<Example3.Leg>) {
-                responseObserver.onNext(delegate.getLeg(cat))
-                responseObserver.onCompleted()
+        object Server {
+            operator fun invoke(delegate: CatService): BindableService = object : org.protokruft.example3.CatServiceGrpc.CatServiceImplBase() {
+                override fun getLeg(cat: org.protokruft.example3.Example3.Cat, responseObserver: io.grpc.stub.StreamObserver<org.protokruft.example3.Example3.Leg>) {
+                    responseObserver.onNext(delegate.getLeg(cat))
+                    responseObserver.onCompleted()
+                }
             }
         }
     }

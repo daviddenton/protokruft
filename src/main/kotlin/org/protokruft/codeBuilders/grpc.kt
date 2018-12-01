@@ -6,6 +6,6 @@ import org.protokruft.GrpcService
 
 fun buildGrpcObject(service: GrpcService, interfaceName: ClassName, serviceName: String): TypeSpec =
         TypeSpec.objectBuilder("Grpc")
-                .addType(buildGrpcClient(service, interfaceName, serviceName))
+                .addType(buildGrpcClient(service, interfaceName))
                 .addType(buildGrpcServer(service, serviceName, interfaceName))
                 .build()

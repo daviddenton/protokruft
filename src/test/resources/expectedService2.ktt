@@ -1,8 +1,8 @@
 package org.protokruft.example2
 
 import com.mygreat.Interface
+import io.gprc.BindableService
 import io.grpc.Channel
-import io.grpc.stub.StreamObserver
 
 interface PersonService : Interface {
     fun getAddress(person: Example2.Person): Example2.Address
@@ -17,10 +17,12 @@ interface PersonService : Interface {
             }
         }
 
-        class Server(private val delegate: PersonService) : PersonServiceGrpc.PersonServiceImplBase() {
-            override fun getAddress(person: Example2.Person, responseObserver: StreamObserver<Example2.Address>) {
-                responseObserver.onNext(delegate.getAddress(person))
-                responseObserver.onCompleted()
+        object Server {
+            operator fun invoke(delegate: PersonService): BindableService = object : org.protokruft.example2.PersonServiceGrpc.PersonServiceImplBase() {
+                override fun getAddress(person: org.protokruft.example2.Example2.Person, responseObserver: io.grpc.stub.StreamObserver<org.protokruft.example2.Example2.Address>) {
+                    responseObserver.onNext(delegate.getAddress(person))
+                    responseObserver.onCompleted()
+                }
             }
         }
     }

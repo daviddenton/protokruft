@@ -1,8 +1,8 @@
 package org.protokruft.example1
 
 import com.mygreat.Interface
+import io.gprc.BindableService
 import io.grpc.Channel
-import io.grpc.stub.StreamObserver
 
 interface CarService : Interface {
     fun getEngine(car: Example1.Car): Example1.Engine
@@ -17,10 +17,12 @@ interface CarService : Interface {
             }
         }
 
-        class Server(private val delegate: CarService) : CarServiceGrpc.CarServiceImplBase() {
-            override fun getEngine(car: Example1.Car, responseObserver: StreamObserver<Example1.Engine>) {
-                responseObserver.onNext(delegate.getEngine(car))
-                responseObserver.onCompleted()
+        object Server {
+            operator fun invoke(delegate: CarService): BindableService = object : org.protokruft.example1.CarServiceGrpc.CarServiceImplBase() {
+                override fun getEngine(car: org.protokruft.example1.Example1.Car, responseObserver: io.grpc.stub.StreamObserver<org.protokruft.example1.Example1.Engine>) {
+                    responseObserver.onNext(delegate.getEngine(car))
+                    responseObserver.onCompleted()
+                }
             }
         }
     }
