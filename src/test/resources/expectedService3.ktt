@@ -1,7 +1,7 @@
 package org.protokruft.example3
 
 import com.mygreat.Interface
-import io.gprc.BindableService
+import io.grpc.BindableService
 import io.grpc.Channel
 
 interface CatService : Interface {

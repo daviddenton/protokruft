@@ -10,7 +10,7 @@ fun buildGrpcServer(service: GrpcService, serviceName: String, interfaceName: Cl
         addFunction(FunSpec.builder("invoke").apply {
             addModifiers(KModifier.OPERATOR)
             addParameter("delegate", interfaceName)
-            returns(ClassName.bestGuess("io.gprc.BindableService"))
+            returns(ClassName.bestGuess("io.grpc.BindableService"))
             addStatement("return ${TypeSpec.anonymousClassBuilder().apply {
                 superclass(service.className.nestedClass(serviceName + "ImplBase"))
                 service.methods.forEach {
