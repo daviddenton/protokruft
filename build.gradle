@@ -106,9 +106,7 @@ dependencies {
     compile "io.grpc:grpc-protobuf:$grpc_version"
     compile "io.grpc:grpc-stub:$grpc_version"
     compile "io.grpc:grpc-core:$grpc_version"
-    compile (group: 'com.squareup', name: 'kotlinpoet', version: '1.0.0-RC3') {
-        exclude group: "org.jetbrains.kotlin"
-    }
+    compile "com.squareup:kotlinpoet:1.0.0-RC3"
     compile 'com.google.guava:guava:23.0'
 
     testCompile 'junit:junit:4.12'
