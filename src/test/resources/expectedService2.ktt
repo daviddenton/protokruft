@@ -12,14 +12,19 @@ interface PersonService : Interface {
             operator fun invoke(channel: Channel): PersonService {
                 val stub = PersonServiceGrpc.newBlockingStub(channel)
                 return object : PersonService {
-                            override fun getAddress(person: org.protokruft.example2.Example2.Person): org.protokruft.example2.Example2.Address = stub.getAddress(person)
+                            override fun getAddress(person:
+                                org.protokruft.example2.Example2.Person):
+                                org.protokruft.example2.Example2.Address = stub.getAddress(person)
                         }
             }
         }
 
         object Server {
-            operator fun invoke(delegate: PersonService): BindableService = object : org.protokruft.example2.PersonServiceGrpc.PersonServiceImplBase() {
-                override fun getAddress(person: org.protokruft.example2.Example2.Person, responseObserver: io.grpc.stub.StreamObserver<org.protokruft.example2.Example2.Address>) {
+            operator fun invoke(delegate: PersonService): BindableService = object :
+                    org.protokruft.example2.PersonServiceGrpc.PersonServiceImplBase() {
+                override fun getAddress(person: org.protokruft.example2.Example2.Person,
+                    responseObserver:
+                    io.grpc.stub.StreamObserver<org.protokruft.example2.Example2.Address>) {
                     responseObserver.onNext(delegate.getAddress(person))
                     responseObserver.onCompleted()
                 }

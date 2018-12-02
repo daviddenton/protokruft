@@ -3,9 +3,11 @@ package org.protokruft.example2
 import kotlin.Unit
 
 object prefixAddress {
-    private fun new(): Example2.Address.Builder = org.protokruft.example2.Example2.Address.newBuilder()
+    private fun new(): Example2.Address.Builder =
+            org.protokruft.example2.Example2.Address.newBuilder()
 
-    operator fun invoke(fn: Example2.Address.Builder.() -> Unit): Example2.Address = new().apply(fn).build()
+    operator fun invoke(fn: Example2.Address.Builder.() -> Unit): Example2.Address =
+            new().apply(fn).build()
 
     fun apply(fn: Example2.Address.Builder.() -> Unit): Example2.Address = invoke(fn)
 
@@ -13,9 +15,11 @@ object prefixAddress {
 }
 
 object prefixPerson {
-    private fun new(): Example2.Person.Builder = org.protokruft.example2.Example2.Person.newBuilder()
+    private fun new(): Example2.Person.Builder =
+            org.protokruft.example2.Example2.Person.newBuilder()
 
-    operator fun invoke(fn: Example2.Person.Builder.() -> Unit): Example2.Person = new().apply(fn).build()
+    operator fun invoke(fn: Example2.Person.Builder.() -> Unit): Example2.Person =
+            new().apply(fn).build()
 
     fun apply(fn: Example2.Person.Builder.() -> Unit): Example2.Person = invoke(fn)
 

@@ -13,9 +13,11 @@ object prefixCar {
 }
 
 object prefixEngine {
-    private fun new(): Example1.Engine.Builder = org.protokruft.example1.Example1.Engine.newBuilder()
+    private fun new(): Example1.Engine.Builder =
+            org.protokruft.example1.Example1.Engine.newBuilder()
 
-    operator fun invoke(fn: Example1.Engine.Builder.() -> Unit): Example1.Engine = new().apply(fn).build()
+    operator fun invoke(fn: Example1.Engine.Builder.() -> Unit): Example1.Engine =
+            new().apply(fn).build()
 
     fun apply(fn: Example1.Engine.Builder.() -> Unit): Example1.Engine = invoke(fn)
 

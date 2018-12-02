@@ -35,7 +35,8 @@ object prefixExample1Bob {
 object prefixExample1BobBill {
     private fun new(): Example1.Bob.Bill.Builder = examplepackage.Example1.Bob.Bill.newBuilder()
 
-    operator fun invoke(fn: Example1.Bob.Bill.Builder.() -> Unit): Example1.Bob.Bill = new().apply(fn).build()
+    operator fun invoke(fn: Example1.Bob.Bill.Builder.() -> Unit): Example1.Bob.Bill =
+            new().apply(fn).build()
 
     fun apply(fn: Example1.Bob.Bill.Builder.() -> Unit): Example1.Bob.Bill = invoke(fn)
 

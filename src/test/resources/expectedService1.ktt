@@ -12,14 +12,17 @@ interface CarService : Interface {
             operator fun invoke(channel: Channel): CarService {
                 val stub = CarServiceGrpc.newBlockingStub(channel)
                 return object : CarService {
-                            override fun getEngine(car: org.protokruft.example1.Example1.Car): org.protokruft.example1.Example1.Engine = stub.getEngine(car)
+                            override fun getEngine(car: org.protokruft.example1.Example1.Car):
+                                org.protokruft.example1.Example1.Engine = stub.getEngine(car)
                         }
             }
         }
 
         object Server {
-            operator fun invoke(delegate: CarService): BindableService = object : org.protokruft.example1.CarServiceGrpc.CarServiceImplBase() {
-                override fun getEngine(car: org.protokruft.example1.Example1.Car, responseObserver: io.grpc.stub.StreamObserver<org.protokruft.example1.Example1.Engine>) {
+            operator fun invoke(delegate: CarService): BindableService = object :
+                    org.protokruft.example1.CarServiceGrpc.CarServiceImplBase() {
+                override fun getEngine(car: org.protokruft.example1.Example1.Car, responseObserver:
+                    io.grpc.stub.StreamObserver<org.protokruft.example1.Example1.Engine>) {
                     responseObserver.onNext(delegate.getEngine(car))
                     responseObserver.onCompleted()
                 }

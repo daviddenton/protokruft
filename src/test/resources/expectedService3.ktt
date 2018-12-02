@@ -12,14 +12,17 @@ interface CatService : Interface {
             operator fun invoke(channel: Channel): CatService {
                 val stub = CatServiceGrpc.newBlockingStub(channel)
                 return object : CatService {
-                            override fun getLeg(cat: org.protokruft.example3.Example3.Cat): org.protokruft.example3.Example3.Leg = stub.getLeg(cat)
+                            override fun getLeg(cat: org.protokruft.example3.Example3.Cat):
+                                org.protokruft.example3.Example3.Leg = stub.getLeg(cat)
                         }
             }
         }
 
         object Server {
-            operator fun invoke(delegate: CatService): BindableService = object : org.protokruft.example3.CatServiceGrpc.CatServiceImplBase() {
-                override fun getLeg(cat: org.protokruft.example3.Example3.Cat, responseObserver: io.grpc.stub.StreamObserver<org.protokruft.example3.Example3.Leg>) {
+            operator fun invoke(delegate: CatService): BindableService = object :
+                    org.protokruft.example3.CatServiceGrpc.CatServiceImplBase() {
+                override fun getLeg(cat: org.protokruft.example3.Example3.Cat, responseObserver:
+                    io.grpc.stub.StreamObserver<org.protokruft.example3.Example3.Leg>) {
                     responseObserver.onNext(delegate.getLeg(cat))
                     responseObserver.onCompleted()
                 }
