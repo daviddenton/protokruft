@@ -1,6 +1,6 @@
 buildscript {
-    ext.kotlin_version = '1.3.10'
-    ext.grpc_version = '1.15.1'
+    ext.kotlin_version = '1.3.20'
+    ext.grpc_version = '1.18.0'
 
     repositories {
         mavenCentral()
@@ -9,7 +9,7 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.6'
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.8'
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.9.6"
         classpath 'com.netflix.nebula:gradle-extra-configurations-plugin:2.2.+'
     }
@@ -17,9 +17,9 @@ buildscript {
 
 plugins {
     id 'java-gradle-plugin'
-    id "com.jfrog.bintray" version "1.7.3"
-    id 'net.saliman.cobertura' version '2.4.0'
-    id 'com.github.kt3k.coveralls' version '2.8.1'
+    id "com.jfrog.bintray" version "1.8.4"
+    id 'net.saliman.cobertura' version '2.5.4'
+    id 'com.github.kt3k.coveralls' version '2.8.2'
 }
 
 repositories {
@@ -96,9 +96,7 @@ cobertura {
 dependencies {
     compile gradleApi()
 
-    provided('com.google.protobuf:protobuf-gradle-plugin:0.8.5') {
-        exclude group: "com.google.guava"
-    }
+    provided('com.google.protobuf:protobuf-gradle-plugin:0.8.8')
     compile "org.reflections:reflections:0.9.11"
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
@@ -107,7 +105,6 @@ dependencies {
     compile "io.grpc:grpc-stub:$grpc_version"
     compile "io.grpc:grpc-core:$grpc_version"
     compile "com.squareup:kotlinpoet:1.0.0-RC3"
-    compile 'com.google.guava:guava:23.0'
 
     testCompile 'junit:junit:4.12'
     testCompile 'com.natpryce:hamkrest:1.3.0.0'
