@@ -135,4 +135,4 @@ Merge the following sections into your Gradle file. This assumes that you've alr
 
 Then just run: `./gradlew generateProtobufDsl`
 
-NB: To generate classes correctly, your project should be using GRPC v1.13.1 or higher of the GRPC libraries.
+NB: To generate classes correctly, your project should be using GRPC v1.18.0 or higher of the GRPC libraries.
