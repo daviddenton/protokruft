@@ -3,14 +3,19 @@ package org.protokruft.example2
 import com.mygreat.Interface
 import io.grpc.BindableService
 import io.grpc.Channel
+import java.time.Duration
+import java.util.concurrent.TimeUnit
 
 interface PersonService : Interface {
     fun getAddress(person: Example2.Person): Example2.Address
 
     object Grpc {
         object Client {
-            operator fun invoke(channel: Channel): PersonService {
-                val stub = PersonServiceGrpc.newBlockingStub(channel)
+            operator fun invoke(channel: Channel, timeout: Duration = Duration.ofSeconds(10)):
+                    PersonService {
+                val stub =
+                        PersonServiceGrpc.newBlockingStub(channel).withDeadlineAfter(timeout.toMillis(),
+                        TimeUnit.MILLISECONDS)
                 return object : PersonService {
                             override fun getAddress(person:
                                 org.protokruft.example2.Example2.Person):

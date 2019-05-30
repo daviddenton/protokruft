@@ -3,14 +3,19 @@ package org.protokruft.example1
 import com.mygreat.Interface
 import io.grpc.BindableService
 import io.grpc.Channel
+import java.time.Duration
+import java.util.concurrent.TimeUnit
 
 interface CarService : Interface {
     fun getEngine(car: Example1.Car): Example1.Engine
 
     object Grpc {
         object Client {
-            operator fun invoke(channel: Channel): CarService {
-                val stub = CarServiceGrpc.newBlockingStub(channel)
+            operator fun invoke(channel: Channel, timeout: Duration = Duration.ofSeconds(10)):
+                    CarService {
+                val stub =
+                        CarServiceGrpc.newBlockingStub(channel).withDeadlineAfter(timeout.toMillis(),
+                        TimeUnit.MILLISECONDS)
                 return object : CarService {
                             override fun getEngine(car: org.protokruft.example1.Example1.Car):
                                 org.protokruft.example1.Example1.Engine = stub.getEngine(car)
