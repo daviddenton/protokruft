@@ -21,8 +21,7 @@ fun buildGrpcClient(service: GrpcService, interfaceName: ClassName) =
                     .defaultValue("Duration.ofSeconds(10)")
                     .build())
                 returns(interfaceName)
-                addStatement("val stub = ${service.className.simpleName}.newBlockingStub(channel).withDeadlineAfter(" +
-                    "timeout.toMillis(), %T.MILLISECONDS)", TimeUnit::class.java)
+                addStatement("val stub = ${service.className.simpleName}.newBlockingStub(channel)")
                 addStatement("return ${TypeSpec.anonymousClassBuilder().apply {
                     addSuperinterface(interfaceName)
                     service.methods.forEach {
@@ -34,8 +33,8 @@ fun buildGrpcClient(service: GrpcService, interfaceName: ClassName) =
                                     }
                                     returns(it.returnType)
                                 }
-                                        .addStatement("return stub.${it.name}(${it.parameters.joinToString(",")
-                                        { it.simpleName.decapitalize() }})")
+                                        .addStatement("return stub.withDeadlineAfter(timeout.toMillis(), %T.MILLISECONDS).${it.name}(${it.parameters.joinToString(",")
+                                        { it.simpleName.decapitalize() }})", TimeUnit::class.java)
                                         .build()
                         )
                     }
